@@ -1,114 +1,158 @@
+ 
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ButtonCustom from '../../components/ButtomCustom';
 
 export default function InitialSystem() {
     const [services, setServices] = useState([]);  
+    const [userLocation, setUserLocation] = useState({ lat: -23.5505, lon: -46.6333 });
+    const [nearbyServices, setNearbyServices] = useState([]);
 
     useEffect(() => {
-        const fetchServices = async () => {
-            try {
-                const response = await fetch('/api/services'); 
-                const data = await response.json();
-                
-                if (data.length === 0) {
-                    setServices(simulatedData());
-                } else {
-                    setServices(data);
-                }
-            } catch (error) {
-                console.log(error);
-                setServices(simulatedData());
+        const simulatedData = [
+            {
+                id: 1,
+                name: "Serviço A",
+                category: "Categoria 1",
+                rating: 4.5,
+                bookings: 120,
+                openingHours: "22:00",
+                distance: 3.5,  
+                address: "Rua ABC, 123",
+                description: "Descrição do Serviço A",
+                imageUrl: "https://via.placeholder.com/120",
+                lat: -23.5505,
+                lon: -46.6333 
+            },
+            {
+                id: 2,
+                name: "Serviço B",
+                category: "Categoria 2",
+                rating: 3.8,
+                bookings: 250,
+                openingHours: "18:00",
+                distance: 2.2,
+                address: "Avenida XYZ, 456",
+                description: "Descrição do Serviço B",
+                imageUrl: "https://via.placeholder.com/120",
+                lat: -23.5500,
+                lon: -46.6000
+            },
+            {
+                id: 3,
+                name: "Serviço C",
+                category: "Categoria 3",
+                rating: 4.7,
+                bookings: 330,
+                openingHours: "20:00",
+                distance: 5.0,
+                address: "Rua QWERTY, 789",
+                description: "Descrição do Serviço C",
+                imageUrl: "https://via.placeholder.com/120",
+                lat: -23.5700,
+                lon: -46.6200
             }
-        };
+        ];
+        setServices(simulatedData);
+    }, []);
+    
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; 
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLon = (lon2 - lon1) * (Math.PI / 180);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    };
 
-        fetchServices();
+    useEffect(() => {
+        const storedLocation = JSON.parse(localStorage.getItem('userLocation'));
+        if (storedLocation) setUserLocation(storedLocation);
     }, []);
 
-    const simulatedData = () => [
-        {
-            name: 'Negócio A',
-            category: 'Categoria A',
-            rating: 4.5,
-            bookings: 50,
-            openingHours: '18:00',
-            distance: 1.5,
-            address: 'Rua X, 123',
-            description: 'Descrição do serviço A.',
-            imageUrl: 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
-        },
-        {
-            name: 'Negócio B',
-            category: 'Categoria B',
-            rating: 4.2,
-            bookings: 40,
-            openingHours: '19:00',
-            distance: 2.0,
-            address: 'Rua Y, 456',
-            description: 'Descrição do serviço B.',
-            imageUrl: 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
-        },
-        {
-            name: 'Negócio C',
-            category: 'Categoria C',
-            rating: 3.8,
-            bookings: 30,
-            openingHours: '17:00',
-            distance: 3.0,
-            address: 'Rua Z, 789',
-            description: 'Descrição do serviço C.',
-            imageUrl: 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
+    useEffect(() => {
+        if (userLocation && services.length > 0) {
+            const filteredServices = services.filter(service => {
+                const distance = calculateDistance(userLocation.lat, userLocation.lon, service.lat, service.lon);
+                return distance <= 10;  
+            });
+            setNearbyServices(filteredServices);
         }
-    ];
+    }, [userLocation, services]);
+
+    const filterNearbyServices = (location) => {
+        const filteredServices = services.filter(service => {
+            const distance = calculateDistance(location.lat, location.lon, service.lat, service.lon);
+            return distance <= 10;  
+        });
+        setNearbyServices(filteredServices);
+    };
 
     return (
         <>
-            <Header>
-                <TopSection>
-                    <LeftLinks>
-                        <Link href="/central">Central do Negócio</Link> | 
-                        <Link href="/promote">Promova seu Negócio Também</Link>
-                    </LeftLinks>
-                    <RightButtons>
-                        <Button>Cadastrar</Button>
-                        <Button>Entrar</Button>
-                    </RightButtons>
-                </TopSection>
-                <BottomSection>
-                    <ImageWrapper>
-                        <img src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=" alt="Imagem do Negócio" />
-                    </ImageWrapper>
-                    <SearchWrapper>
-                        <SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
-                    </SearchWrapper>
-                </BottomSection>
-            </Header>
-
             <Body>
                 <Title>Serviços Recomendados</Title>
                 <CardList>
-                    {/* Renderizando os cards dinamicamente com os dados da API */}
-                    {services.map((service, index) => (
-                        <Card key={index}>
-                            <CardImage src={service.imageUrl} alt={service.name} />
-                            <CardContent>
-                                <CardHeader>
-                                    <div>
-                                        <CardName>{service.name} <CardCategory>{service.category}</CardCategory></CardName>
-                                        <CardRating>⭐ {service.rating}</CardRating>
-                                        <CardBookings>{service.bookings} agendamentos concluídos</CardBookings>
-                                    </div>
-                                    <CardDetails>
-                                        <CardOpenUntil>Aberto até {service.openingHours}</CardOpenUntil>
-                                        <CardDistance>{service.distance} km de você</CardDistance>
-                                        <CardLocation>{service.address}</CardLocation>
-                                    </CardDetails>
-                                </CardHeader>
-                                <CardDescription>{service.description}</CardDescription>
-                            </CardContent>
-                        </Card>
-                    ))}
+                    {services.length === 0 ? (
+                        <Card><CardDescription>Não há serviços disponíveis no momento.</CardDescription></Card>
+                    ) : (
+                        services.map((service) => (
+                            <Card key={service.id}>
+                                <CardImage src={service.imageUrl} alt={service.name} />
+                                <CardContent>
+                                    <CardHeader>
+                                        <div>
+                                            <CardName>{service.name} <CardCategory>{service.category}</CardCategory></CardName>
+                                            <CardRating>⭐ {service.rating}</CardRating>
+                                            <CardBookings>{service.bookings} agendamentos concluídos</CardBookings>
+                                        </div>
+                                        <CardDetails>
+                                            <CardOpenUntil>Aberto até {service.openingHours}</CardOpenUntil>
+                                            <CardDistance>{service.distance} km de você</CardDistance>
+                                            <CardLocation>{service.address}</CardLocation>
+                                        </CardDetails>
+                                    </CardHeader>
+                                    <CardDescription>{service.description}</CardDescription>
+                                </CardContent>
+                            </Card>
+                        ))
+                    )}
                 </CardList>
-                <SeeMoreButton>Veja Mais</SeeMoreButton>
+                <ButtonCustom padding="0.75rem 2rem">Veja Mais!</ButtonCustom>
+
+                <hr />
+
+                <Title>Perto de Você!</Title>
+                <CardList>
+                    {nearbyServices.length === 0 ? (
+                        <Card><CardDescription>Não há serviços próximos disponíveis no momento.</CardDescription></Card>
+                    ) : (
+                        nearbyServices.map((service) => (
+                            <Card key={service.id}>
+                                <CardImage src={service.imageUrl} alt={service.name} />
+                                <CardContent>
+                                    <CardHeader>
+                                        <div>
+                                            <CardName>{service.name} <CardCategory>{service.category}</CardCategory></CardName>
+                                            <CardRating>⭐ {service.rating}</CardRating>
+                                            <CardBookings>{service.bookings} agendamentos concluídos</CardBookings>
+                                        </div>
+                                        <CardDetails>
+                                            <CardOpenUntil>Aberto até {service.openingHours}</CardOpenUntil>
+                                            <CardDistance>{service.distance} km de você</CardDistance>
+                                            <CardLocation>{service.address}</CardLocation>
+                                        </CardDetails>
+                                    </CardHeader>
+                                    <CardDescription>{service.description}</CardDescription>
+                                </CardContent>
+                            </Card>
+                        ))
+                    )}
+                </CardList>
             </Body>
         </>
     );
@@ -119,10 +163,6 @@ const Header = styled.header`
     flex-direction: column;
     padding: 1rem;
     background-color: #f4f4f4;
-
-    @media (max-width: 768px) {
-        padding: 0.5rem;
-    }
 `;
 
 const TopSection = styled.div`
@@ -133,17 +173,12 @@ const TopSection = styled.div`
 
     @media (max-width: 768px) {
         flex-direction: column;
-        align-items: flex-start;
     }
 `;
 
 const LeftLinks = styled.div`
     display: flex;
     gap: 10px;
-
-    @media (max-width: 768px) {
-        margin-bottom: 10px;
-    }
 `;
 
 const Link = styled.a`
@@ -159,24 +194,9 @@ const Link = styled.a`
 const RightButtons = styled.div`
     display: flex;
     gap: 10px;
-
     @media (max-width: 768px) {
         width: 100%;
         justify-content: space-between;
-    }
-`;
-
-const Button = styled.button`
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-
-    &:hover {
-        background-color: #0056b3;
     }
 `;
 
@@ -184,6 +204,7 @@ const BottomSection = styled.div`
     display: flex;
     padding-top: 1rem;
     align-items: center;
+    flex-wrap: wrap;
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -192,14 +213,14 @@ const BottomSection = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-    width: 10%;  /* Ajuste da largura para telas grandes */
+    width: 10%;
     img {
         width: 100%;
         height: auto;
     }
 
     @media (max-width: 768px) {
-        width: 60%;  /* Ajuste da largura para telas pequenas */
+        width: 60%;
         margin-bottom: 10px;
     }
 `;
@@ -207,7 +228,6 @@ const ImageWrapper = styled.div`
 const SearchWrapper = styled.div`
     width: 70%;
     padding-left: 80px;
-
     @media (max-width: 768px) {
         width: 90%;
         padding-left: 0;
@@ -324,23 +344,4 @@ const CardDescription = styled.p`
 const CardLocation = styled.p`
     font-size: 0.9rem;
     color: #777;
-`;
-
-const SeeMoreButton = styled.button`
-    background-color: #007bff;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    bottom: 1rem;
-    right: 1rem;
-    width: auto;
-    text-align: center;
-    margin: 10px;
-
-    &:hover {
-        background-color: #0056b3;
-    }
 `;
