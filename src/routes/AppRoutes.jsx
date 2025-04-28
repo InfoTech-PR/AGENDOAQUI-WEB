@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import NotFound from "../pages/errors/NotFound";
 import NotAuthorized from "../pages/errors/NotAuthorized";
+import InitialSystem from "../pages/initials/InitialSystem";
 import RegisterUser from "../pages/RegisterUser";
 import Profile from "../pages/Profile";
 import ResetPassword from "../pages/ResetPassword";
@@ -25,6 +26,7 @@ export default function AppRoutes() {
 
                 {/* Rota protegida */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path="/initial-system" element={<InitialSystem />} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             </Routes>
         </Router>

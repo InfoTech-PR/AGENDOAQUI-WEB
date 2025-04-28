@@ -12,14 +12,6 @@ const menu = [
             { label: "Resultados do Monitoramento", path: "/dashboards/control", icon: GiPlantsAndAnimals },
         ]
     },
-    {
-        label: "Pedidos",
-        path: "/orders",
-        icon: MdAlternateEmail,
-        subItems: [
-            { label: "Acessos", path: "/orders/acess", icon: FaUserPlus }
-        ]
-    }
 ];
 
 export const getMenuByRole = (role) => {

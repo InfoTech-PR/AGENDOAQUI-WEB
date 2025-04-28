@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import styled, { useTheme } from "styled-components";
-import LogoImage from "/logo.png";
+import LogoImage from "/logomarca.png";
 import { useState, useEffect } from "react";
 import { getMenuByRole } from "../utils/menu";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("dataUser"));
-    const role = user.user.role;
+    const role = user?.user?.role || 'manager';
     const filteredMenu = getMenuByRole(role);
     setMenuItems(filteredMenu);
 
@@ -84,8 +84,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <Footer>
           <p>Realização:</p>
           <div className="footer-logos">
-            <img class="img1" src="/MANACA.png" alt="Logo 1" />
-            <img class="img2" src="/IPEC.png" alt="Logo 2" />
+            <img className="img1" src="/infotech_white.png" alt="Logo 1" />
           </div>
         </Footer>
       </SidebarContainer>
@@ -154,7 +153,7 @@ const NavItem = styled.li`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme, selected }) => !selected && "#1a1a1a"};
+    background-color: ${({ selected }) => !selected && "#1a1a1a"};
   }
 `;
 
@@ -186,7 +185,7 @@ const LogoWrapper = styled.div`
   margin-bottom: 2rem;
 
   img {
-    max-width: 175px;
+    max-width: 200px;
     height: auto;
   }
 `;
