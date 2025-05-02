@@ -1,11 +1,34 @@
  
+ 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ButtonCustom from '../../components/ButtomCustom';
 
 export default function InitialSystem() {
     const [services, setServices] = useState([]);
+    const [userLocation, setUserLocation] = useState(null);
 
+    useEffect(() => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const coords = {
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude
+                        };
+                        setUserLocation(coords);
+                        console.log("Localização do usuário:", coords);
+                    },
+                    (error) => {
+                        setUserLocation("error");
+                        console.error("Erro ao obter localização:", error.message);
+                    }
+                );
+            } else {
+                console.warn("Geolocalização não suportada pelo navegador.");
+            }
+    }, []);
+    
     useEffect(() => {
         const simulatedData = [
             {
@@ -18,7 +41,7 @@ export default function InitialSystem() {
                 distance: 3.5,  
                 address: "Rua ABC, 123",
                 description: "Descrição do Serviço A",
-                imageUrl: "https://via.placeholder.com/120",
+                imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
                 lat: -23.5505,
                 lon: -46.6333 
             },
@@ -32,7 +55,7 @@ export default function InitialSystem() {
                 distance: 2.2,
                 address: "Avenida XYZ, 456",
                 description: "Descrição do Serviço B",
-                imageUrl: "https://via.placeholder.com/120",
+                imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
                 lat: -23.5500,
                 lon: -46.6000
             },
@@ -46,7 +69,7 @@ export default function InitialSystem() {
                 distance: 5.0,
                 address: "Rua QWERTY, 789",
                 description: "Descrição do Serviço C",
-                imageUrl: "https://via.placeholder.com/120",
+                imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
                 lat: -23.5700,
                 lon: -46.6200
             }
@@ -79,6 +102,8 @@ export default function InitialSystem() {
                     </Styled.SearchWrapper>
                 </Styled.BottomSection>
             </Styled.Header>
+
+            {userLocation}
 
             <Styled.Body>
                 <Styled.Title>Serviços Recomendados</Styled.Title>
