@@ -1,13 +1,10 @@
  
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ButtonCustom from '../../components/ButtomCustom';
 
 export default function InitialSystem() {
-    const [services, setServices] = useState([]);  
-    const [userLocation, setUserLocation] = useState({ lat: -23.5505, lon: -46.6333 });
-    const [nearbyServices, setNearbyServices] = useState([]);
+    const [services, setServices] = useState([]);
 
     useEffect(() => {
         const simulatedData = [
@@ -56,185 +53,162 @@ export default function InitialSystem() {
         ];
         setServices(simulatedData);
     }, []);
-    
-    const calculateDistance = (lat1, lon1, lat2, lon2) => {
-        const R = 6371; 
-        const dLat = (lat2 - lat1) * (Math.PI / 180);
-        const dLon = (lon2 - lon1) * (Math.PI / 180);
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    };
-
-    useEffect(() => {
-        const storedLocation = JSON.parse(localStorage.getItem('userLocation'));
-        if (storedLocation) setUserLocation(storedLocation);
-    }, []);
-
-    useEffect(() => {
-        if (userLocation && services.length > 0) {
-            const filteredServices = services.filter(service => {
-                const distance = calculateDistance(userLocation.lat, userLocation.lon, service.lat, service.lon);
-                return distance <= 10;  
-            });
-            setNearbyServices(filteredServices);
-        }
-    }, [userLocation, services]);
-
-    const filterNearbyServices = (location) => {
-        const filteredServices = services.filter(service => {
-            const distance = calculateDistance(location.lat, location.lon, service.lat, service.lon);
-            return distance <= 10;  
-        });
-        setNearbyServices(filteredServices);
-    };
 
     return (
         <>
-            <Body>
-                <Title>Serviços Recomendados</Title>
-                <CardList>
-                    {services.length === 0 ? (
-                        <Card><CardDescription>Não há serviços disponíveis no momento.</CardDescription></Card>
-                    ) : (
-                        services.map((service) => (
-                            <Card key={service.id}>
-                                <CardImage src={service.imageUrl} alt={service.name} />
-                                <CardContent>
-                                    <CardHeader>
-                                        <div>
-                                            <CardName>{service.name} <CardCategory>{service.category}</CardCategory></CardName>
-                                            <CardRating>⭐ {service.rating}</CardRating>
-                                            <CardBookings>{service.bookings} agendamentos concluídos</CardBookings>
-                                        </div>
-                                        <CardDetails>
-                                            <CardOpenUntil>Aberto até {service.openingHours}</CardOpenUntil>
-                                            <CardDistance>{service.distance} km de você</CardDistance>
-                                            <CardLocation>{service.address}</CardLocation>
-                                        </CardDetails>
-                                    </CardHeader>
-                                    <CardDescription>{service.description}</CardDescription>
-                                </CardContent>
-                            </Card>
-                        ))
-                    )}
-                </CardList>
-                <ButtonCustom padding="0.75rem 2rem">Veja Mais!</ButtonCustom>
+            <Styled.Header>
+                <Styled.TopSection>
+                    <Styled.LeftLinks>
+                        <Styled.Link href="/central">Central do Negócio</Styled.Link> | 
+                        <Styled.Link href="/promote">Promova seu Negócio Também</Styled.Link>
+                    </Styled.LeftLinks>
+                    <Styled.RightButtons>
+                        <ButtonCustom>Cadastrar</ButtonCustom>
+                        <ButtonCustom>Entrar</ButtonCustom>
+                    </Styled.RightButtons>
+                </Styled.TopSection>
+                <Styled.BottomSection>
+                    <Styled.ImageWrapper>
+                        <img
+                        src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+                        alt="Imagem do Negócio"
+                        />
+                    </Styled.ImageWrapper>
+                    <Styled.SearchWrapper>
+                        <Styled.SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
+                    </Styled.SearchWrapper>
+                </Styled.BottomSection>
+            </Styled.Header>
+
+            <Styled.Body>
+                <Styled.Title>Serviços Recomendados</Styled.Title>
+                <Styled.CardList>
+                {services.length === 0 ? (
+                    <Styled.Card>
+                        <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
+                    </Styled.Card>
+                ) : (
+                    services.map((service) => (
+                    <Styled.Card key={service.id}>
+                        <Styled.CardImage src={service.imageUrl} alt={service.name} />
+                        <Styled.CardContent>
+                            <Styled.CardHeader>
+                                <div>
+                                    <Styled.CardName>
+                                        {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
+                                    </Styled.CardName>
+                                    <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
+                                    <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
+                                </div>
+                                <Styled.CardDetails>
+                                <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
+                                <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
+                                <Styled.CardLocation>{service.address}</Styled.CardLocation>
+                                </Styled.CardDetails>
+                            </Styled.CardHeader>
+                            <Styled.CardDescription>{service.description}</Styled.CardDescription>
+                        </Styled.CardContent>
+                    </Styled.Card>
+                    ))
+                )}
+                </Styled.CardList>
+
+                <ButtonCustom>Veja Mais!</ButtonCustom>
 
                 <hr />
 
-                <Title>Perto de Você!</Title>
-                <CardList>
-                    {nearbyServices.length === 0 ? (
-                        <Card><CardDescription>Não há serviços próximos disponíveis no momento.</CardDescription></Card>
-                    ) : (
-                        nearbyServices.map((service) => (
-                            <Card key={service.id}>
-                                <CardImage src={service.imageUrl} alt={service.name} />
-                                <CardContent>
-                                    <CardHeader>
-                                        <div>
-                                            <CardName>{service.name} <CardCategory>{service.category}</CardCategory></CardName>
-                                            <CardRating>⭐ {service.rating}</CardRating>
-                                            <CardBookings>{service.bookings} agendamentos concluídos</CardBookings>
-                                        </div>
-                                        <CardDetails>
-                                            <CardOpenUntil>Aberto até {service.openingHours}</CardOpenUntil>
-                                            <CardDistance>{service.distance} km de você</CardDistance>
-                                            <CardLocation>{service.address}</CardLocation>
-                                        </CardDetails>
-                                    </CardHeader>
-                                    <CardDescription>{service.description}</CardDescription>
-                                </CardContent>
-                            </Card>
-                        ))
-                    )}
-                </CardList>
-            </Body>
+                <Styled.Title>Perto de Você!</Styled.Title>
+                <Styled.CardList>
+                    <Styled.Card>
+                        <Styled.CardDescription>Não há serviços próximos disponíveis no momento.</Styled.CardDescription>
+                    </Styled.Card>
+                </Styled.CardList>
+            </Styled.Body>
         </>
     );
 }
 
-const Header = styled.header`
+const Styled = {
+  Header: styled.header`
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    background-color: #f4f4f4;
-`;
+    background-color: rgb(204, 204, 204);
+  `,
 
-const TopSection = styled.div`
+  TopSection: styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 1rem;
 
     @media (max-width: 768px) {
-        flex-direction: column;
+      flex-direction: column;
     }
-`;
+  `,
 
-const LeftLinks = styled.div`
+  LeftLinks: styled.div`
     display: flex;
     gap: 10px;
-`;
+  `,
 
-const Link = styled.a`
+  Link: styled.a`
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
 
     &:hover {
-        text-decoration: underline;
+      text-decoration: underline;
     }
-`;
+  `,
 
-const RightButtons = styled.div`
+  RightButtons: styled.div`
     display: flex;
     gap: 10px;
-    @media (max-width: 768px) {
-        width: 100%;
-        justify-content: space-between;
-    }
-`;
 
-const BottomSection = styled.div`
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  `,
+
+  BottomSection: styled.div`
     display: flex;
     padding-top: 1rem;
     align-items: center;
     flex-wrap: wrap;
 
     @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: center;
+      flex-direction: column;
+      align-items: center;
     }
-`;
+  `,
 
-const ImageWrapper = styled.div`
+  ImageWrapper: styled.div`
     width: 10%;
+
     img {
-        width: 100%;
-        height: auto;
+      width: 100%;
+      height: auto;
     }
 
     @media (max-width: 768px) {
-        width: 60%;
-        margin-bottom: 10px;
+      width: 60%;
+      margin-bottom: 10px;
     }
-`;
+  `,
 
-const SearchWrapper = styled.div`
+  SearchWrapper: styled.div`
     width: 70%;
     padding-left: 80px;
-    @media (max-width: 768px) {
-        width: 90%;
-        padding-left: 0;
-    }
-`;
 
-const SearchInput = styled.input`
+    @media (max-width: 768px) {
+      width: 90%;
+      padding-left: 0;
+    }
+  `,
+
+  SearchInput: styled.input`
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ccc;
@@ -243,28 +217,29 @@ const SearchInput = styled.input`
     color: #333;
 
     &:focus {
-        outline: none;
-        border-color: #007bff;
+      outline: none;
+      border-color: #007bff;
     }
-`;
+  `,
 
-const Body = styled.main`
+  Body: styled.main`
     padding: 2rem;
-`;
+  `,
 
-const Title = styled.h2`
+  Title: styled.h2`
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
-`;
+  `,
 
-const CardList = styled.div`
+  CardList: styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-`;
+    margin-bottom: 1rem;
+  `,
 
-const Card = styled.div`
+  Card: styled.div`
     display: flex;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -275,73 +250,74 @@ const Card = styled.div`
     align-items: center;
 
     @media (min-width: 769px) {
-        flex-direction: row;
-        align-items: flex-start;
+      flex-direction: row;
+      align-items: flex-start;
     }
-`;
+  `,
 
-const CardImage = styled.img`
+  CardImage: styled.img`
     width: 120px;
     height: 120px;
     border-radius: 8px;
     object-fit: cover;
     margin-right: 1rem;
-`;
+  `,
 
-const CardContent = styled.div`
+  CardContent: styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
-`;
+  `,
 
-const CardHeader = styled.div`
+  CardHeader: styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
-`;
+  `,
 
-const CardName = styled.h3`
+  CardName: styled.h3`
     font-size: 1.2rem;
     font-weight: bold;
-`;
+  `,
 
-const CardCategory = styled.p`
+  CardCategory: styled.p`
     font-size: 0.9rem;
     color: #777;
-`;
+  `,
 
-const CardRating = styled.p`
+  CardRating: styled.p`
     font-size: 1rem;
     font-weight: bold;
     color: #ffb400;
-`;
+  `,
 
-const CardBookings = styled.p`
+  CardBookings: styled.p`
     font-size: 0.9rem;
     color: #333;
-`;
+  `,
 
-const CardDetails = styled.div`
+  CardDetails: styled.div`
     text-align: right;
-`;
+  `,
 
-const CardOpenUntil = styled.p`
+  CardOpenUntil: styled.p`
     font-size: 0.9rem;
     color: #333;
-`;
+  `,
 
-const CardDistance = styled.p`
+  CardDistance: styled.p`
     font-size: 0.9rem;
     color: #333;
-`;
+  `,
 
-const CardDescription = styled.p`
+  CardLocation: styled.p`
+    font-size: 0.9rem;
+    color: #777;
+  `,
+
+  CardDescription: styled.p`
     font-size: 1rem;
     color: #555;
     margin-bottom: 1rem;
-`;
-
-const CardLocation = styled.p`
-    font-size: 0.9rem;
-    color: #777;
-`;
+  `,
+};
