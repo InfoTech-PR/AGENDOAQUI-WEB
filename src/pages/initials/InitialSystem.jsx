@@ -2,10 +2,29 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ButtonCustom from '../../components/ButtomCustom';
 
+const haversineDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371;
+  const toRad = (x) => (x * Math.PI) / 180;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = R * c; 
+  return distance * 1000; 
+};
+  
 export default function InitialSystem() {
   const [services, setServices] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [nearbyServices, setNearbyServices] = useState([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -43,8 +62,8 @@ export default function InitialSystem() {
             address: "Rua ABC, 123",
             description: "Descrição do Serviço A",
             imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
-            lat: -23.5505,
-            lon: -46.6333 
+            lat: -25.520297,
+            lon: -48.5287365 
         },
         {
             id: 2,
@@ -78,85 +97,116 @@ export default function InitialSystem() {
     setServices(simulatedData);
   }, []);
 
+  useEffect(() => {
+    if (userLocation) {
+      const nearby = services.filter((service) => {
+        const distance = haversineDistance(userLocation.lat, userLocation.lon, service.lat, service.lon);
+        return distance <= 1000; 
+      });
+      setNearbyServices(nearby);
+    }
+  }, [userLocation, services]);
+
   if (loading) {
     return <div>Carregando localização...</div>; 
   }
     
   return (
-      <>
-          <Styled.Header>
-              <Styled.TopSection>
-                  <Styled.LeftLinks>
-                      <Styled.Link href="/central">Central do Negócio</Styled.Link> | 
-                      <Styled.Link href="/promote">Promova seu Negócio Também</Styled.Link>
-                  </Styled.LeftLinks>
-                  <Styled.RightButtons>
-                      <ButtonCustom>Cadastrar</ButtonCustom>
-                      <ButtonCustom>Entrar</ButtonCustom>
-                  </Styled.RightButtons>
-              </Styled.TopSection>
-              <Styled.BottomSection>
-                  <Styled.ImageWrapper>
-                      <img
-                      src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
-                      alt="Imagem do Negócio"
-                      />
-                  </Styled.ImageWrapper>
-                  <Styled.SearchWrapper>
-                      <Styled.SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
-                  </Styled.SearchWrapper>
-              </Styled.BottomSection>
-          </Styled.Header>
-          {userLocation === "error" ? (
-            <div>Não foi possível obter a sua localização.</div>
+    <>
+      <Styled.Header>
+        <Styled.TopSection>
+            <Styled.LeftLinks>
+                <Styled.Link href="/central">Central do Negócio</Styled.Link> | 
+                <Styled.Link href="/promote">Promova seu Negócio Também</Styled.Link>
+            </Styled.LeftLinks>
+            <Styled.RightButtons>
+                <ButtonCustom>Cadastrar</ButtonCustom>
+                <ButtonCustom>Entrar</ButtonCustom>
+            </Styled.RightButtons>
+        </Styled.TopSection>
+        <Styled.BottomSection>
+            <Styled.ImageWrapper>
+                <img
+                src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+                alt="Imagem do Negócio"
+                />
+            </Styled.ImageWrapper>
+            <Styled.SearchWrapper>
+                <Styled.SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
+            </Styled.SearchWrapper>
+        </Styled.BottomSection>
+      </Styled.Header>
+
+      <Styled.Body>
+        <Styled.Title>Serviços Recomendados</Styled.Title>
+        <Styled.CardList>
+        {services.length === 0 ? (
+            <Styled.Card>
+                <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
+            </Styled.Card>
+        ) : (
+            services.map((service) => (
+            <Styled.Card key={service.id}>
+                <Styled.CardImage src={service.imageUrl} alt={service.name} />
+                <Styled.CardContent>
+                    <Styled.CardHeader>
+                        <div>
+                            <Styled.CardName>
+                                {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
+                            </Styled.CardName>
+                            <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
+                            <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
+                        </div>
+                        <Styled.CardDetails>
+                        <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
+                        <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
+                        <Styled.CardLocation>{service.address}</Styled.CardLocation>
+                        </Styled.CardDetails>
+                    </Styled.CardHeader>
+                    <Styled.CardDescription>{service.description}</Styled.CardDescription>
+                </Styled.CardContent>
+            </Styled.Card>
+            ))
+        )}
+        </Styled.CardList>
+
+        <ButtonCustom>Veja Mais!</ButtonCustom>
+
+        <hr />
+
+        <Styled.Title>Perto de Você!</Styled.Title>
+        <Styled.CardList>
+          {nearbyServices.length === 0 ? (
+            <Styled.Card>
+              <Styled.CardDescription>Não há serviços próximos disponíveis no momento.</Styled.CardDescription>
+            </Styled.Card>
           ) : (
-            <div>Localização: Latitude {userLocation.lat}, Longitude {userLocation.lon}</div>
+            nearbyServices.map((service) => (
+              <Styled.Card key={service.id}>
+                <Styled.CardImage src={service.imageUrl} alt={service.name} />
+                <Styled.CardContent>
+                  <Styled.CardHeader>
+                    <div>
+                      <Styled.CardName>
+                        {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
+                      </Styled.CardName>
+                      <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
+                      <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
+                    </div>
+                    <Styled.CardDetails>
+                      <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
+                      <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
+                      <Styled.CardLocation>{service.address}</Styled.CardLocation>
+                    </Styled.CardDetails>
+                  </Styled.CardHeader>
+                  <Styled.CardDescription>{service.description}</Styled.CardDescription>
+                </Styled.CardContent>
+              </Styled.Card>
+            ))
           )}
-          <Styled.Body>
-              <Styled.Title>Serviços Recomendados</Styled.Title>
-              <Styled.CardList>
-              {services.length === 0 ? (
-                  <Styled.Card>
-                      <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
-                  </Styled.Card>
-              ) : (
-                  services.map((service) => (
-                  <Styled.Card key={service.id}>
-                      <Styled.CardImage src={service.imageUrl} alt={service.name} />
-                      <Styled.CardContent>
-                          <Styled.CardHeader>
-                              <div>
-                                  <Styled.CardName>
-                                      {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
-                                  </Styled.CardName>
-                                  <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
-                                  <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
-                              </div>
-                              <Styled.CardDetails>
-                              <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
-                              <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
-                              <Styled.CardLocation>{service.address}</Styled.CardLocation>
-                              </Styled.CardDetails>
-                          </Styled.CardHeader>
-                          <Styled.CardDescription>{service.description}</Styled.CardDescription>
-                      </Styled.CardContent>
-                  </Styled.Card>
-                  ))
-              )}
-              </Styled.CardList>
-
-              <ButtonCustom>Veja Mais!</ButtonCustom>
-
-              <hr />
-
-              <Styled.Title>Perto de Você!</Styled.Title>
-              <Styled.CardList>
-                  <Styled.Card>
-                      <Styled.CardDescription>Não há serviços próximos disponíveis no momento.</Styled.CardDescription>
-                  </Styled.Card>
-              </Styled.CardList>
-          </Styled.Body>
-      </>
+        </Styled.CardList>
+      </Styled.Body>
+    </>
   );
 }
 
