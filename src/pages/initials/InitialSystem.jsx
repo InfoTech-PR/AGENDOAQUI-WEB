@@ -108,8 +108,14 @@ export default function InitialSystem() {
       const nearby = updatedServices.filter((service) => service.distance <= 1); 
       setNearbyServices(nearby);
       setServices(updatedServices);
+    } else {
+      setServices(services.map(service => ({
+        ...service,
+        distance: 'Indisponível'
+      })));
+      setNearbyServices([]);  
     }
-  }, [userLocation, services]);
+  }, [userLocation]);
     
   return (
     <>
