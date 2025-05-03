@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-// import styled from 'styled-components';
-// import ButtonCustom from '../../components/ButtomCustom';
 
 export default function InitialSystem() {
-  // const [services, setServices] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
+  const [loading, setLoading] = useState(true); // Estado de carregamento
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -15,22 +13,65 @@ export default function InitialSystem() {
             lon: position.coords.longitude
           };
           setUserLocation(coords);
+          setLoading(false); // Atualiza para indicar que a localização foi carregada
           console.log("Localização do usuário:", coords);
         },
         (error) => {
           setUserLocation("error");
+          setLoading(false); // Atualiza para indicar que a localização foi carregada com erro
           console.error("Erro ao obter localização:", error.message);
         }
       );
     } else {
       console.warn("Geolocalização não suportada pelo navegador.");
+      setLoading(false); // Atualiza quando geolocalização não é suportada
     }
   }, []);
-  
+
+  if (loading) {
+    return <div>Carregando localização...</div>; // Exibe mensagem de carregamento
+  }
+
+  // Exibe a localização ou mensagem de erro
   return (
-    <>{userLocation}</>
+    <>
+      {userLocation === "error" ? (
+        <div>Não foi possível obter a sua localização.</div>
+      ) : (
+        <div>Localização: Latitude {userLocation.lat}, Longitude {userLocation.lon}</div>
+      )}
+    </>
   );
 }
+
+// import React, { useEffect, useState } from 'react';
+// import styled from 'styled-components';
+// import ButtonCustom from '../../components/ButtomCustom';
+
+// export default function InitialSystem() {
+//     const [services, setServices] = useState([]);
+//     const [userLocation, setUserLocation] = useState(null);
+
+//     useEffect(() => {
+//             if (navigator.geolocation) {
+//                 navigator.geolocation.getCurrentPosition(
+//                     (position) => {
+//                         const coords = {
+//                             lat: position.coords.latitude,
+//                             lon: position.coords.longitude
+//                         };
+//                         setUserLocation(coords);
+//                         console.log("Localização do usuário:", coords);
+//                     },
+//                     (error) => {
+//                         setUserLocation("error");
+//                         console.error("Erro ao obter localização:", error.message);
+//                     }
+//                 );
+//             } else {
+//                 console.warn("Geolocalização não suportada pelo navegador.");
+//             }
+//     }, []);
     
 //     useEffect(() => {
 //         const simulatedData = [
