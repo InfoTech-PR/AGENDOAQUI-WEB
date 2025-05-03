@@ -101,19 +101,19 @@ export default function InitialSystem() {
   useEffect(() => {
     if (userLocation) {
       const updatedServices = services.map((service) => {
+        if (userLocation === "error" || !userLocation) {
+          return { ...service, distance: null };
+        }
+
         const distance = haversineDistance(userLocation.lat, userLocation.lon, service.lat, service.lon);
-        return { ...service, distance: (distance / 1000).toFixed(2) }; 
+        return { ...service, distance: (distance / 1000).toFixed(2) };
       });
 
-      const nearby = updatedServices.filter((service) => service.distance <= 1); 
+      const nearby = updatedServices.filter((service) => service.distance !== null && service.distance <= 1);
       setNearbyServices(nearby);
       setServices(updatedServices);
     } else {
-      setServices(services.map(service => ({
-        ...service,
-        distance: 'Indisponível'
-      })));
-      setNearbyServices([]);  
+      setNearbyServices([]); 
     }
   }, [userLocation]);
     
@@ -165,7 +165,9 @@ export default function InitialSystem() {
                         </div>
                         <Styled.CardDetails>
                         <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
-                        <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
+                        <Styled.CardDistance>
+                          {service.distance !== null ? `${service.distance} km de você` : "Distância indisponível"}
+                        </Styled.CardDistance>
                         <Styled.CardLocation>{service.address}</Styled.CardLocation>
                         </Styled.CardDetails>
                     </Styled.CardHeader>
