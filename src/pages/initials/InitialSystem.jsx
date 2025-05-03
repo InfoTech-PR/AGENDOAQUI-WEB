@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ButtonCustom from '../../components/ButtomCustom';
@@ -58,7 +59,7 @@ export default function InitialSystem() {
             rating: 4.5,
             bookings: 120,
             openingHours: "22:00",
-            distance: 3.5,  
+            distance: 0,  
             address: "Rua ABC, 123",
             description: "Descrição do Serviço A",
             imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
@@ -72,7 +73,7 @@ export default function InitialSystem() {
             rating: 3.8,
             bookings: 250,
             openingHours: "18:00",
-            distance: 2.2,
+            distance: 0,
             address: "Avenida XYZ, 456",
             description: "Descrição do Serviço B",
             imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
@@ -86,7 +87,7 @@ export default function InitialSystem() {
             rating: 4.7,
             bookings: 330,
             openingHours: "20:00",
-            distance: 5.0,
+            distance: 0,
             address: "Rua QWERTY, 789",
             description: "Descrição do Serviço C",
             imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
@@ -99,17 +100,16 @@ export default function InitialSystem() {
 
   useEffect(() => {
     if (userLocation) {
-      const nearby = services.filter((service) => {
+      const updatedServices = services.map((service) => {
         const distance = haversineDistance(userLocation.lat, userLocation.lon, service.lat, service.lon);
-        return distance <= 1000; 
+        return { ...service, distance: (distance / 1000).toFixed(2) }; 
       });
+
+      const nearby = updatedServices.filter((service) => service.distance <= 1); 
       setNearbyServices(nearby);
+      setServices(updatedServices);
     }
   }, [userLocation, services]);
-
-  if (loading) {
-    return <div>Carregando localização...</div>; 
-  }
     
   return (
     <>
