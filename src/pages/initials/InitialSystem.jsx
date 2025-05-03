@@ -1,348 +1,351 @@
- 
- 
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import ButtonCustom from '../../components/ButtomCustom';
+// import styled from 'styled-components';
+// import ButtonCustom from '../../components/ButtomCustom';
 
 export default function InitialSystem() {
-    const [services, setServices] = useState([]);
-    const [userLocation, setUserLocation] = useState(null);
+  // const [services, setServices] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
 
-    useEffect(() => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const coords = {
-                            lat: position.coords.latitude,
-                            lon: position.coords.longitude
-                        };
-                        setUserLocation(coords);
-                        console.log("Localização do usuário:", coords);
-                    },
-                    (error) => {
-                        setUserLocation("error");
-                        console.error("Erro ao obter localização:", error.message);
-                    }
-                );
-            } else {
-                console.warn("Geolocalização não suportada pelo navegador.");
-            }
-    }, []);
-    
-    useEffect(() => {
-        const simulatedData = [
-            {
-                id: 1,
-                name: "Serviço A",
-                category: "Categoria 1",
-                rating: 4.5,
-                bookings: 120,
-                openingHours: "22:00",
-                distance: 3.5,  
-                address: "Rua ABC, 123",
-                description: "Descrição do Serviço A",
-                imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
-                lat: -23.5505,
-                lon: -46.6333 
-            },
-            {
-                id: 2,
-                name: "Serviço B",
-                category: "Categoria 2",
-                rating: 3.8,
-                bookings: 250,
-                openingHours: "18:00",
-                distance: 2.2,
-                address: "Avenida XYZ, 456",
-                description: "Descrição do Serviço B",
-                imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
-                lat: -23.5500,
-                lon: -46.6000
-            },
-            {
-                id: 3,
-                name: "Serviço C",
-                category: "Categoria 3",
-                rating: 4.7,
-                bookings: 330,
-                openingHours: "20:00",
-                distance: 5.0,
-                address: "Rua QWERTY, 789",
-                description: "Descrição do Serviço C",
-                imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
-                lat: -23.5700,
-                lon: -46.6200
-            }
-        ];
-        setServices(simulatedData);
-    }, []);
-
-    return (
-        <>
-            <Styled.Header>
-                <Styled.TopSection>
-                    <Styled.LeftLinks>
-                        <Styled.Link href="/central">Central do Negócio</Styled.Link> | 
-                        <Styled.Link href="/promote">Promova seu Negócio Também</Styled.Link>
-                    </Styled.LeftLinks>
-                    <Styled.RightButtons>
-                        <ButtonCustom>Cadastrar</ButtonCustom>
-                        <ButtonCustom>Entrar</ButtonCustom>
-                    </Styled.RightButtons>
-                </Styled.TopSection>
-                <Styled.BottomSection>
-                    <Styled.ImageWrapper>
-                        <img
-                        src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
-                        alt="Imagem do Negócio"
-                        />
-                    </Styled.ImageWrapper>
-                    <Styled.SearchWrapper>
-                        <Styled.SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
-                    </Styled.SearchWrapper>
-                </Styled.BottomSection>
-            </Styled.Header>
-
-            {userLocation}
-
-            <Styled.Body>
-                <Styled.Title>Serviços Recomendados</Styled.Title>
-                <Styled.CardList>
-                {services.length === 0 ? (
-                    <Styled.Card>
-                        <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
-                    </Styled.Card>
-                ) : (
-                    services.map((service) => (
-                    <Styled.Card key={service.id}>
-                        <Styled.CardImage src={service.imageUrl} alt={service.name} />
-                        <Styled.CardContent>
-                            <Styled.CardHeader>
-                                <div>
-                                    <Styled.CardName>
-                                        {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
-                                    </Styled.CardName>
-                                    <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
-                                    <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
-                                </div>
-                                <Styled.CardDetails>
-                                <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
-                                <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
-                                <Styled.CardLocation>{service.address}</Styled.CardLocation>
-                                </Styled.CardDetails>
-                            </Styled.CardHeader>
-                            <Styled.CardDescription>{service.description}</Styled.CardDescription>
-                        </Styled.CardContent>
-                    </Styled.Card>
-                    ))
-                )}
-                </Styled.CardList>
-
-                <ButtonCustom>Veja Mais!</ButtonCustom>
-
-                <hr />
-
-                <Styled.Title>Perto de Você!</Styled.Title>
-                <Styled.CardList>
-                    <Styled.Card>
-                        <Styled.CardDescription>Não há serviços próximos disponíveis no momento.</Styled.CardDescription>
-                    </Styled.Card>
-                </Styled.CardList>
-            </Styled.Body>
-        </>
-    );
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          };
+          setUserLocation(coords);
+          console.log("Localização do usuário:", coords);
+        },
+        (error) => {
+          setUserLocation("error");
+          console.error("Erro ao obter localização:", error.message);
+        }
+      );
+    } else {
+      console.warn("Geolocalização não suportada pelo navegador.");
+    }
+  }, []);
+  
+  return (
+    <>{userLocation}</>
+  );
 }
+    
+//     useEffect(() => {
+//         const simulatedData = [
+//             {
+//                 id: 1,
+//                 name: "Serviço A",
+//                 category: "Categoria 1",
+//                 rating: 4.5,
+//                 bookings: 120,
+//                 openingHours: "22:00",
+//                 distance: 3.5,  
+//                 address: "Rua ABC, 123",
+//                 description: "Descrição do Serviço A",
+//                 imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
+//                 lat: -23.5505,
+//                 lon: -46.6333 
+//             },
+//             {
+//                 id: 2,
+//                 name: "Serviço B",
+//                 category: "Categoria 2",
+//                 rating: 3.8,
+//                 bookings: 250,
+//                 openingHours: "18:00",
+//                 distance: 2.2,
+//                 address: "Avenida XYZ, 456",
+//                 description: "Descrição do Serviço B",
+//                 imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
+//                 lat: -23.5500,
+//                 lon: -46.6000
+//             },
+//             {
+//                 id: 3,
+//                 name: "Serviço C",
+//                 category: "Categoria 3",
+//                 rating: 4.7,
+//                 bookings: 330,
+//                 openingHours: "20:00",
+//                 distance: 5.0,
+//                 address: "Rua QWERTY, 789",
+//                 description: "Descrição do Serviço C",
+//                 imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
+//                 lat: -23.5700,
+//                 lon: -46.6200
+//             }
+//         ];
+//         setServices(simulatedData);
+//     }, []);
 
-const Styled = {
-  Header: styled.header`
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    background-color: rgb(204, 204, 204);
-  `,
+//     return (
+//         <>
+//             <Styled.Header>
+//                 <Styled.TopSection>
+//                     <Styled.LeftLinks>
+//                         <Styled.Link href="/central">Central do Negócio</Styled.Link> | 
+//                         <Styled.Link href="/promote">Promova seu Negócio Também</Styled.Link>
+//                     </Styled.LeftLinks>
+//                     <Styled.RightButtons>
+//                         <ButtonCustom>Cadastrar</ButtonCustom>
+//                         <ButtonCustom>Entrar</ButtonCustom>
+//                     </Styled.RightButtons>
+//                 </Styled.TopSection>
+//                 <Styled.BottomSection>
+//                     <Styled.ImageWrapper>
+//                         <img
+//                         src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+//                         alt="Imagem do Negócio"
+//                         />
+//                     </Styled.ImageWrapper>
+//                     <Styled.SearchWrapper>
+//                         <Styled.SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
+//                     </Styled.SearchWrapper>
+//                 </Styled.BottomSection>
+//             </Styled.Header>
 
-  TopSection: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1rem;
+//             {userLocation}
 
-    @media (max-width: 768px) {
-      flex-direction: column;
-    }
-  `,
+//             <Styled.Body>
+//                 <Styled.Title>Serviços Recomendados</Styled.Title>
+//                 <Styled.CardList>
+//                 {services.length === 0 ? (
+//                     <Styled.Card>
+//                         <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
+//                     </Styled.Card>
+//                 ) : (
+//                     services.map((service) => (
+//                     <Styled.Card key={service.id}>
+//                         <Styled.CardImage src={service.imageUrl} alt={service.name} />
+//                         <Styled.CardContent>
+//                             <Styled.CardHeader>
+//                                 <div>
+//                                     <Styled.CardName>
+//                                         {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
+//                                     </Styled.CardName>
+//                                     <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
+//                                     <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
+//                                 </div>
+//                                 <Styled.CardDetails>
+//                                 <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
+//                                 <Styled.CardDistance>{service.distance} km de você</Styled.CardDistance>
+//                                 <Styled.CardLocation>{service.address}</Styled.CardLocation>
+//                                 </Styled.CardDetails>
+//                             </Styled.CardHeader>
+//                             <Styled.CardDescription>{service.description}</Styled.CardDescription>
+//                         </Styled.CardContent>
+//                     </Styled.Card>
+//                     ))
+//                 )}
+//                 </Styled.CardList>
 
-  LeftLinks: styled.div`
-    display: flex;
-    gap: 10px;
-  `,
+//                 <ButtonCustom>Veja Mais!</ButtonCustom>
 
-  Link: styled.a`
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
+//                 <hr />
 
-    &:hover {
-      text-decoration: underline;
-    }
-  `,
+//                 <Styled.Title>Perto de Você!</Styled.Title>
+//                 <Styled.CardList>
+//                     <Styled.Card>
+//                         <Styled.CardDescription>Não há serviços próximos disponíveis no momento.</Styled.CardDescription>
+//                     </Styled.Card>
+//                 </Styled.CardList>
+//             </Styled.Body>
+//         </>
+//     );
+// }
 
-  RightButtons: styled.div`
-    display: flex;
-    gap: 10px;
+// const Styled = {
+//   Header: styled.header`
+//     display: flex;
+//     flex-direction: column;
+//     padding: 1rem;
+//     background-color: rgb(204, 204, 204);
+//   `,
 
-    @media (max-width: 768px) {
-      width: 100%;
-      justify-content: space-between;
-    }
-  `,
+//   TopSection: styled.div`
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     padding-bottom: 1rem;
 
-  BottomSection: styled.div`
-    display: flex;
-    padding-top: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
+//     @media (max-width: 768px) {
+//       flex-direction: column;
+//     }
+//   `,
 
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: center;
-    }
-  `,
+//   LeftLinks: styled.div`
+//     display: flex;
+//     gap: 10px;
+//   `,
 
-  ImageWrapper: styled.div`
-    width: 10%;
+//   Link: styled.a`
+//     text-decoration: none;
+//     color: #007bff;
+//     font-weight: bold;
 
-    img {
-      width: 100%;
-      height: auto;
-    }
+//     &:hover {
+//       text-decoration: underline;
+//     }
+//   `,
 
-    @media (max-width: 768px) {
-      width: 60%;
-      margin-bottom: 10px;
-    }
-  `,
+//   RightButtons: styled.div`
+//     display: flex;
+//     gap: 10px;
 
-  SearchWrapper: styled.div`
-    width: 70%;
-    padding-left: 80px;
+//     @media (max-width: 768px) {
+//       width: 100%;
+//       justify-content: space-between;
+//     }
+//   `,
 
-    @media (max-width: 768px) {
-      width: 90%;
-      padding-left: 0;
-    }
-  `,
+//   BottomSection: styled.div`
+//     display: flex;
+//     padding-top: 1rem;
+//     align-items: center;
+//     flex-wrap: wrap;
 
-  SearchInput: styled.input`
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    color: #333;
+//     @media (max-width: 768px) {
+//       flex-direction: column;
+//       align-items: center;
+//     }
+//   `,
 
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-    }
-  `,
+//   ImageWrapper: styled.div`
+//     width: 10%;
 
-  Body: styled.main`
-    padding: 2rem;
-  `,
+//     img {
+//       width: 100%;
+//       height: auto;
+//     }
 
-  Title: styled.h2`
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-  `,
+//     @media (max-width: 768px) {
+//       width: 60%;
+//       margin-bottom: 10px;
+//     }
+//   `,
 
-  CardList: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-  `,
+//   SearchWrapper: styled.div`
+//     width: 70%;
+//     padding-left: 80px;
 
-  Card: styled.div`
-    display: flex;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    flex-direction: column;
-    align-items: center;
+//     @media (max-width: 768px) {
+//       width: 90%;
+//       padding-left: 0;
+//     }
+//   `,
 
-    @media (min-width: 769px) {
-      flex-direction: row;
-      align-items: flex-start;
-    }
-  `,
+//   SearchInput: styled.input`
+//     width: 100%;
+//     padding: 0.75rem;
+//     border: 1px solid #ccc;
+//     border-radius: 4px;
+//     font-size: 1rem;
+//     color: #333;
 
-  CardImage: styled.img`
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-right: 1rem;
-  `,
+//     &:focus {
+//       outline: none;
+//       border-color: #007bff;
+//     }
+//   `,
 
-  CardContent: styled.div`
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  `,
+//   Body: styled.main`
+//     padding: 2rem;
+//   `,
 
-  CardHeader: styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  `,
+//   Title: styled.h2`
+//     font-size: 1.5rem;
+//     font-weight: bold;
+//     margin-bottom: 1.5rem;
+//   `,
 
-  CardName: styled.h3`
-    font-size: 1.2rem;
-    font-weight: bold;
-  `,
+//   CardList: styled.div`
+//     display: flex;
+//     flex-direction: column;
+//     gap: 1.5rem;
+//     margin-bottom: 1rem;
+//   `,
 
-  CardCategory: styled.p`
-    font-size: 0.9rem;
-    color: #777;
-  `,
+//   Card: styled.div`
+//     display: flex;
+//     background-color: #fff;
+//     border: 1px solid #ddd;
+//     border-radius: 8px;
+//     padding: 1rem;
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//     flex-direction: column;
+//     align-items: center;
 
-  CardRating: styled.p`
-    font-size: 1rem;
-    font-weight: bold;
-    color: #ffb400;
-  `,
+//     @media (min-width: 769px) {
+//       flex-direction: row;
+//       align-items: flex-start;
+//     }
+//   `,
 
-  CardBookings: styled.p`
-    font-size: 0.9rem;
-    color: #333;
-  `,
+//   CardImage: styled.img`
+//     width: 120px;
+//     height: 120px;
+//     border-radius: 8px;
+//     object-fit: cover;
+//     margin-right: 1rem;
+//   `,
 
-  CardDetails: styled.div`
-    text-align: right;
-  `,
+//   CardContent: styled.div`
+//     display: flex;
+//     flex-direction: column;
+//     flex: 1;
+//   `,
 
-  CardOpenUntil: styled.p`
-    font-size: 0.9rem;
-    color: #333;
-  `,
+//   CardHeader: styled.div`
+//     display: flex;
+//     justify-content: space-between;
+//     margin-bottom: 1rem;
+//   `,
 
-  CardDistance: styled.p`
-    font-size: 0.9rem;
-    color: #333;
-  `,
+//   CardName: styled.h3`
+//     font-size: 1.2rem;
+//     font-weight: bold;
+//   `,
 
-  CardLocation: styled.p`
-    font-size: 0.9rem;
-    color: #777;
-  `,
+//   CardCategory: styled.p`
+//     font-size: 0.9rem;
+//     color: #777;
+//   `,
 
-  CardDescription: styled.p`
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 1rem;
-  `,
-};
+//   CardRating: styled.p`
+//     font-size: 1rem;
+//     font-weight: bold;
+//     color: #ffb400;
+//   `,
+
+//   CardBookings: styled.p`
+//     font-size: 0.9rem;
+//     color: #333;
+//   `,
+
+//   CardDetails: styled.div`
+//     text-align: right;
+//   `,
+
+//   CardOpenUntil: styled.p`
+//     font-size: 0.9rem;
+//     color: #333;
+//   `,
+
+//   CardDistance: styled.p`
+//     font-size: 0.9rem;
+//     color: #333;
+//   `,
+
+//   CardLocation: styled.p`
+//     font-size: 0.9rem;
+//     color: #777;
+//   `,
+
+//   CardDescription: styled.p`
+//     font-size: 1rem;
+//     color: #555;
+//     margin-bottom: 1rem;
+//   `,
+// };
