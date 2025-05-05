@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import MainLayout from "../../layouts/MainLayout";
 import ButtonCustom from '../../components/ButtomCustom';
 
 const haversineDistance = (lat1, lon1, lat2, lon2) => {
@@ -22,11 +22,20 @@ const haversineDistance = (lat1, lon1, lat2, lon2) => {
 };
   
 export default function InitialSystem() {
+  const [user, setUser] = useState(null);
   const [services, setServices] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [nearbyServices, setNearbyServices] = useState([]);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("dataUser");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser.user);
+    }
+  }, []);
+  
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -118,64 +127,45 @@ export default function InitialSystem() {
   }, [userLocation]);
     
   return (
-    <>
-      <Styled.Header>
-        <Styled.TopSection>
-            <Styled.LeftLinks>
-                <Styled.Link href="/central">Central do Negócio</Styled.Link> | 
-                <Styled.Link href="/promote">Promova seu Negócio Também</Styled.Link>
-            </Styled.LeftLinks>
-            <Styled.RightButtons>
-                <ButtonCustom>Cadastrar</ButtonCustom>
-                <ButtonCustom>Entrar</ButtonCustom>
-            </Styled.RightButtons>
-        </Styled.TopSection>
-        <Styled.BottomSection>
-            <Styled.ImageWrapper>
-                <img
-                src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
-                alt="Imagem do Negócio"
-                />
-            </Styled.ImageWrapper>
-            <Styled.SearchWrapper>
-                <Styled.SearchInput placeholder="Digite o Nome do Negócio ou a Categoria" />
-            </Styled.SearchWrapper>
-        </Styled.BottomSection>
-      </Styled.Header>
-
+    <MainLayout>
       <Styled.Body>
+        {user && (
+          <Styled.Card>
+            <Styled.CardDescription>Agendar Novamente</Styled.CardDescription>
+          </Styled.Card>
+        )}
         <Styled.Title>Serviços Recomendados</Styled.Title>
         <Styled.CardList>
-        {services.length === 0 ? (
+          {services.length === 0 ? (
             <Styled.Card>
-                <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
+              <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
             </Styled.Card>
-        ) : (
+          ) : (
             services.map((service) => (
-            <Styled.Card key={service.id}>
+              <Styled.Card key={service.id}>
                 <Styled.CardImage src={service.imageUrl} alt={service.name} />
                 <Styled.CardContent>
-                    <Styled.CardHeader>
-                        <div>
-                            <Styled.CardName>
-                                {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
-                            </Styled.CardName>
-                            <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
-                            <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
-                        </div>
-                        <Styled.CardDetails>
-                        <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
-                        <Styled.CardDistance>
-                          {service.distance !== null ? `${service.distance} km de você` : "Distância indisponível"}
-                        </Styled.CardDistance>
-                        <Styled.CardLocation>{service.address}</Styled.CardLocation>
-                        </Styled.CardDetails>
-                    </Styled.CardHeader>
-                    <Styled.CardDescription>{service.description}</Styled.CardDescription>
+                  <Styled.CardHeader>
+                    <div>
+                      <Styled.CardName>
+                        {service.name} <Styled.CardCategory>{service.category}</Styled.CardCategory>
+                      </Styled.CardName>
+                      <Styled.CardRating>⭐ {service.rating}</Styled.CardRating>
+                      <Styled.CardBookings>{service.bookings} agendamentos concluídos</Styled.CardBookings>
+                    </div>
+                    <Styled.CardDetails>
+                      <Styled.CardOpenUntil>Aberto até {service.openingHours}</Styled.CardOpenUntil>
+                      <Styled.CardDistance>
+                        {service.distance !== null ? `${service.distance} km de você` : "Distância indisponível"}
+                      </Styled.CardDistance>
+                      <Styled.CardLocation>{service.address}</Styled.CardLocation>
+                    </Styled.CardDetails>
+                  </Styled.CardHeader>
+                  <Styled.CardDescription>{service.description}</Styled.CardDescription>
                 </Styled.CardContent>
-            </Styled.Card>
+              </Styled.Card>
             ))
-        )}
+          )}
         </Styled.CardList>
 
         <ButtonCustom>Veja Mais!</ButtonCustom>
@@ -214,7 +204,7 @@ export default function InitialSystem() {
           )}
         </Styled.CardList>
       </Styled.Body>
-    </>
+    </MainLayout>
   );
 }
 
@@ -224,92 +214,6 @@ const Styled = {
     flex-direction: column;
     padding: 1rem;
     background-color: rgb(204, 204, 204);
-  `,
-
-  TopSection: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1rem;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-    }
-  `,
-
-  LeftLinks: styled.div`
-    display: flex;
-    gap: 10px;
-  `,
-
-  Link: styled.a`
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  `,
-
-  RightButtons: styled.div`
-    display: flex;
-    gap: 10px;
-
-    @media (max-width: 768px) {
-      width: 100%;
-      justify-content: space-between;
-    }
-  `,
-
-  BottomSection: styled.div`
-    display: flex;
-    padding-top: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: center;
-    }
-  `,
-
-  ImageWrapper: styled.div`
-    width: 10%;
-
-    img {
-      width: 100%;
-      height: auto;
-    }
-
-    @media (max-width: 768px) {
-      width: 60%;
-      margin-bottom: 10px;
-    }
-  `,
-
-  SearchWrapper: styled.div`
-    width: 70%;
-    padding-left: 80px;
-
-    @media (max-width: 768px) {
-      width: 90%;
-      padding-left: 0;
-    }
-  `,
-
-  SearchInput: styled.input`
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    color: #333;
-
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-    }
   `,
 
   Body: styled.main`

@@ -95,7 +95,7 @@ export default function Sidebar({ isOpen, onClose }) {
 const SidebarContainer = styled.aside`
   width: 240px;
   height: 100vh;
-  background-color: #111;
+  background-color:rgb(131, 131, 131);
   color: white;
   padding: 1rem;
   position: fixed;

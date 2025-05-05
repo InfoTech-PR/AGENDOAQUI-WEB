@@ -15,7 +15,7 @@ export default function AppRoutes() {
         <Router>
             <Routes>
                 {/* Login público */}
-                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<RegisterUser />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/reset-password/:token" element={<NewPasswordReset />} />
@@ -26,7 +26,7 @@ export default function AppRoutes() {
 
                 {/* Rota protegida */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-                <Route path="/initial-system" element={<InitialSystem />} />
+                <Route path="/" element={<InitialSystem />} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             </Routes>
         </Router>
