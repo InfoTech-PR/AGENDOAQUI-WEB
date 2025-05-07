@@ -33,7 +33,7 @@ export default function InitialSystem() {
   const navigate = useNavigate();
 
   const handleCardClick = (service) => {
-  navigate('/business', { state: { service } });
+    navigate('/business', { state: { service } });
   };
   
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function InitialSystem() {
             distance: 0,  
             address: "Rua ABC, 123",
             description: "Descrição do Serviço A",
-            imageUrl: "https://www.pngkey.com/png/detail/14-148130_minion-imagenes-de-100x100-pixeles.png",
+            imageUrl: "https://media.istockphoto.com/id/1409329028/pt/vetorial/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=mYYgZekhwsH2MrjuAip3dTTh2lxSYTr6el6u0C75MrI=",
             lat: -25.520297,
             lon: -48.5287365 
         },

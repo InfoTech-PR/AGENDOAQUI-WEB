@@ -15,10 +15,9 @@ const theme = {
         placeholder: darken(0.25, primaryColor),
         linkHover: '#ffa64d',
 
-        // Cores para campos desabilitados
-        disabledBg: '#f5f5f5',      // Fundo do campo desabilitado
-        disabledBorder: '#dcdcdc',  // Borda do campo desabilitado
-        disabledText: '#a8a8a8',    // Cor do texto do campo desabilitado
+        disabledBg: '#f5f5f5',      
+        disabledBorder: '#dcdcdc', 
+        disabledText: '#a8a8a8',    
     },
 };
 
