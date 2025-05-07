@@ -9,6 +9,7 @@ import Profile from "../pages/Profile";
 import ResetPassword from "../pages/ResetPassword";
 import NewPasswordReset from "../pages/NewPasswordReset";
 import PrivateRoute from "./PrivateRoute";
+import InitialBusiness from "../pages/initials/InitialBusiness";
 
 export default function AppRoutes() {
     return (
@@ -20,13 +21,15 @@ export default function AppRoutes() {
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/reset-password/:token" element={<NewPasswordReset />} />
 
+                <Route path="/" element={<InitialSystem />} />
+                <Route path="/business" element={<InitialBusiness />} />
+
                 {/* Rota de erro */}
                 <Route path="/not-authorized" element={<NotAuthorized />} />
                 <Route path="*" element={<NotFound />} />
 
                 {/* Rota protegida */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-                <Route path="/" element={<InitialSystem />} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             </Routes>
         </Router>

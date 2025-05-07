@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MainLayout from "../../layouts/MainLayout";
-import ButtonCustom from '../../components/ButtomCustom';
+import ButtonCustom from '../../components/ButtonCustom';
+import { useNavigate } from 'react-router-dom';
 
 const haversineDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -27,7 +28,14 @@ export default function InitialSystem() {
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [nearbyServices, setNearbyServices] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentService = services[currentIndex] || {};
+  const navigate = useNavigate();
 
+  const handleCardClick = (service) => {
+  navigate('/business', { state: { service } });
+  };
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("dataUser");
     if (storedUser) {
@@ -104,7 +112,13 @@ export default function InitialSystem() {
             lon: -46.6200
         }
     ];
-    setServices(simulatedData);
+    const sortedData = simulatedData.sort((a, b) => {
+      if (b.rating === a.rating) {
+          return b.bookings - a.bookings;
+      }
+      return b.rating - a.rating; 
+    });
+    setServices(sortedData);
   }, []);
 
   useEffect(() => {
@@ -126,23 +140,61 @@ export default function InitialSystem() {
     }
   }, [userLocation]);
     
+  const nextService = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % services.length);
+  };
+
+  const prevService = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + services.length) % services.length);
+  };
+
   return (
     <MainLayout>
       <Styled.Body>
         {user && (
-          <Styled.Card>
-            <Styled.CardDescription>Agendar Novamente</Styled.CardDescription>
-          </Styled.Card>
+          <>
+            <Styled.Title>Agendar Novamente</Styled.Title>
+            <Styled.Carousel>
+              <Styled.ArrowButton left onClick={prevService}>{"<"}</Styled.ArrowButton>
+
+              <Styled.Card key={service.id} onClick={() => handleCardClick(service)} style={{ cursor: 'pointer' }}>
+                <Styled.CardImage src={currentService.imageUrl} alt={currentService.name} />
+                <Styled.CardContent>
+                  <Styled.CardHeader>
+                    <div>
+                      <Styled.CardName>
+                        {currentService.name} <Styled.CardCategory>{currentService.category}</Styled.CardCategory>
+                      </Styled.CardName>
+                      <Styled.CardRating>⭐ {currentService.rating}</Styled.CardRating>
+                      <Styled.CardBookings>{currentService.bookings} agendamentos concluídos</Styled.CardBookings>
+                    </div>
+                    <Styled.CardDetails>
+                      <Styled.CardOpenUntil>Aberto até {currentService.openingHours}</Styled.CardOpenUntil>
+                      <Styled.CardDistance>
+                        {currentService.distance !== null ? `${currentService.distance} km de você` : "Distância indisponível"}
+                      </Styled.CardDistance>
+                      <Styled.CardLocation>{currentService.address}</Styled.CardLocation>
+                    </Styled.CardDetails>
+                  </Styled.CardHeader>
+                  <Styled.CardDescription>{currentService.description}</Styled.CardDescription>
+                </Styled.CardContent>
+              </Styled.Card>
+
+              <Styled.ArrowButton right onClick={nextService}>{">"}</Styled.ArrowButton>
+            </Styled.Carousel>
+            </>
         )}
+
         <Styled.Title>Serviços Recomendados</Styled.Title>
+
         <Styled.CardList>
           {services.length === 0 ? (
-            <Styled.Card>
+            <Styled.Card key={services.id} onClick={() => handleCardClick(services)} style={{ cursor: 'pointer' }}>
               <Styled.CardDescription>Não há serviços disponíveis no momento.</Styled.CardDescription>
             </Styled.Card>
           ) : (
             services.map((service) => (
-              <Styled.Card key={service.id}>
+              <Styled.Card key={service.id} onClick={() => handleCardClick(service)} style={{ cursor: 'pointer' }}>
                 <Styled.CardImage src={service.imageUrl} alt={service.name} />
                 <Styled.CardContent>
                   <Styled.CardHeader>
@@ -175,12 +227,12 @@ export default function InitialSystem() {
         <Styled.Title>Perto de Você!</Styled.Title>
         <Styled.CardList>
           {nearbyServices.length === 0 ? (
-            <Styled.Card>
+            <Styled.Card key={nearbyServices.id} onClick={() => handleCardClick(service)} style={{ cursor: 'pointer' }}>
               <Styled.CardDescription>Não há serviços próximos disponíveis no momento.</Styled.CardDescription>
             </Styled.Card>
           ) : (
             nearbyServices.map((service) => (
-              <Styled.Card key={service.id}>
+              <Styled.Card key={service.id} onClick={() => handleCardClick(service)} style={{ cursor: 'pointer' }}>
                 <Styled.CardImage src={service.imageUrl} alt={service.name} />
                 <Styled.CardContent>
                   <Styled.CardHeader>
@@ -209,6 +261,32 @@ export default function InitialSystem() {
 }
 
 const Styled = {
+  Carousel: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  `,
+
+  ArrowButton: styled.button`
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #333;
+
+    ${({ left }) => left && `
+      margin-right: 1rem;
+    `}
+
+    ${({ right }) => right && `
+      margin-left: 1rem;
+    `}
+  `,
+
   Header: styled.header`
     display: flex;
     flex-direction: column;
@@ -246,6 +324,11 @@ const Styled = {
     @media (min-width: 769px) {
       flex-direction: row;
       align-items: flex-start;
+    }
+    transition: transform 0.2s ease;
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
   `,
 
