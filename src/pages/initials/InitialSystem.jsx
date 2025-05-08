@@ -157,7 +157,7 @@ export default function InitialSystem() {
             <Styled.Carousel>
               <Styled.ArrowButton left onClick={prevService}>{"<"}</Styled.ArrowButton>
 
-              <Styled.Card key={service.id} onClick={() => handleCardClick(service)} style={{ cursor: 'pointer' }}>
+              <Styled.Card key={currentService.id} onClick={() => handleCardClick(currentService)} style={{ cursor: 'pointer' }}>
                 <Styled.CardImage src={currentService.imageUrl} alt={currentService.name} />
                 <Styled.CardContent>
                   <Styled.CardHeader>

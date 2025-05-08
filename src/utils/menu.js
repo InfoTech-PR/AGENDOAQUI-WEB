@@ -1,4 +1,4 @@
-import { FaUserFriends, FaCalendarAlt, FaUserCircle, FaQuestionCircle } from "react-icons/fa";
+import { FaUserFriends, FaCalendarAlt, FaUserCircle, FaQuestionCircle, FaHistory } from "react-icons/fa";
 
 const menu = [
   {
@@ -24,6 +24,18 @@ const menu = [
     path: "/admin/ajuda",
     icon: FaQuestionCircle, 
     role: "admin",
+	},
+	{
+    label: "Agendamentos",
+    path: "/cliente/meus-agendamentos",
+    icon: FaCalendarAlt,
+    role: "client",
+  },
+  {
+    label: "Historico",
+    path: "/cliente/historico",
+    icon: FaHistory, 
+    role: "client",
   },
 ];
 

@@ -24,8 +24,8 @@ export default function AppRoutes() {
 
                 <Route path="/" element={<InitialSystem />} />
                 <Route path="/business" element={<InitialBusiness />} />
-                
-                <Route path="/admin" element={<InitialAdmin />} />
+
+                <Route path="/admin" element={<PrivateRoute requiredRole="admin" ><InitialAdmin /></PrivateRoute>} />
                 {/* <Route path="/admin" element={<PrivateRoute requiredRole="guest" ><InitialAdmin /> </PrivateRoute>} /> */}
 
                 {/* Rota de erro */}
