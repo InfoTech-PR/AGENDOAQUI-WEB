@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("dataUser"));
-    const role = user?.user?.role || 'manager';
+    const role = user?.user?.role || 'client';
     const filteredMenu = getMenuByRole(role);
     setMenuItems(filteredMenu);
 

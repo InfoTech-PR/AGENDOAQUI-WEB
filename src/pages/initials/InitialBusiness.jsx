@@ -143,20 +143,20 @@ export default function InitialBusiness() {
           </Styled.Info>
         </Styled.BusinesSection>
 
-				<Styled.LocationSection>
-        	<Styled.Title>Localização</Styled.Title>
-					<Styled.LocationSectionContent>
-						<Styled.InfoLocation>
-							<p><strong>Distância:</strong> {service.distance} km</p>
-							<p><strong>Endereço:</strong> {service.address}</p>
-						</Styled.InfoLocation>
-						<Styled.Map
-							src={`https://www.google.com/maps/embed/v1/view?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}Y&center=${service.lat},${service.lon}&zoom=15`}
-							allowFullScreen
-							loading="lazy"
-						/>
-					</Styled.LocationSectionContent>
-				</Styled.LocationSection>
+			<Styled.LocationSection>
+				<Styled.Title>Localização</Styled.Title>
+				<Styled.LocationSectionContent>
+					<Styled.InfoLocation>
+						<p><strong>Distância:</strong> {service.distance} km</p>
+						<p><strong>Endereço:</strong> {service.address}</p>
+					</Styled.InfoLocation>
+					<Styled.Map
+						src={`https://www.google.com/maps/embed/v1/view?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}Y&center=${service.lat},${service.lon}&zoom=15`}
+						allowFullScreen
+						loading="lazy"
+					/>
+				</Styled.LocationSectionContent>
+			</Styled.LocationSection>
 				
 				<Styled.HourbusinesSection>
 					<h2>Horários de Funcionamento</h2>
@@ -697,24 +697,13 @@ const Styled = {
 		flex-wrap: wrap;
 	`,
 
-	ContactItem: styled.div`
-		font-size: 1rem;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		color: #fff;
-
-		span {
-			color: ${({ theme }) => theme.colors.text};
-		}
-	`,
-
 	ContactItem: styled.a`
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
 		color: inherit;
 		text-decoration: none;
+		color: #fff;
 
 		&:hover {
 			text-decoration: none;
@@ -726,13 +715,6 @@ const Styled = {
 
 	ReviewsSection: styled.section`
     padding: 2rem;
-  `,
-
-  Title: styled.h2`
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    text-align: center;
   `,
 
   Stats: styled.div`

@@ -10,6 +10,7 @@ import ResetPassword from "../pages/ResetPassword";
 import NewPasswordReset from "../pages/NewPasswordReset";
 import PrivateRoute from "./PrivateRoute";
 import InitialBusiness from "../pages/initials/InitialBusiness";
+import InitialAdmin from "../pages/initials/InitialAdmin";
 
 export default function AppRoutes() {
     return (
@@ -23,6 +24,9 @@ export default function AppRoutes() {
 
                 <Route path="/" element={<InitialSystem />} />
                 <Route path="/business" element={<InitialBusiness />} />
+                
+                <Route path="/admin" element={<InitialAdmin />} />
+                {/* <Route path="/admin" element={<PrivateRoute requiredRole="guest" ><InitialAdmin /> </PrivateRoute>} /> */}
 
                 {/* Rota de erro */}
                 <Route path="/not-authorized" element={<NotAuthorized />} />

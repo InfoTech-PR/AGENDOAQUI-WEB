@@ -1,24 +1,37 @@
-import { MdAlternateEmail } from "react-icons/md";
-import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { FaUserPlus } from "react-icons/fa";
-import { GiPlantsAndAnimals } from "react-icons/gi";
+import { FaUserFriends, FaCalendarAlt, FaUserCircle, FaQuestionCircle } from "react-icons/fa";
 
 const menu = [
-    {
-        label: "Dashboards",
-        path: "/dashboards",
-        icon: TbLayoutDashboardFilled,
-        subItems: [
-            { label: "Resultados do Monitoramento", path: "/dashboards/control", icon: GiPlantsAndAnimals },
-        ]
-    },
+  {
+    label: "Clientes",
+    path: "/admin/clientes",
+    icon: FaUserFriends, 
+    role: "admin",
+  },
+  {
+    label: "Agendamentos",
+    path: "/admin/agendamentos",
+    icon: FaCalendarAlt,
+    role: "admin",
+  },
+  {
+    label: "Minha Página",
+    path: "/admin/minha-pagina",
+    icon: FaUserCircle,
+    role: "admin",
+  },
+  {
+    label: "Ajuda",
+    path: "/admin/ajuda",
+    icon: FaQuestionCircle, 
+    role: "admin",
+  },
 ];
 
 export const getMenuByRole = (role) => {
-    return menu.filter(item => {
-        if (item.label === "Pedidos" && role !== "manager") return false;
-        return true;
-    });
+  return menu.filter(item => {
+    if (item.role && item.role !== role) return false;
+    return true;
+  });
 };
 
 export default menu;
