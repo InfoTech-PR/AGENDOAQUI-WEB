@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MainLayout from "../../layouts/MainLayout";
-import ButtonCustom from '../../components/ButtonCustom';
+import ButtonCustom from '../../components/CustomButton';
 import { useNavigate } from 'react-router-dom';
 
 const haversineDistance = (lat1, lon1, lat2, lon2) => {

@@ -4,13 +4,14 @@ import Login from "../pages/Login";
 import NotFound from "../pages/errors/NotFound";
 import NotAuthorized from "../pages/errors/NotAuthorized";
 import InitialSystem from "../pages/initials/InitialSystem";
-import RegisterUser from "../pages/RegisterUser";
+import RegisterUser from "../pages/registers/RegisterUser";
 import Profile from "../pages/Profile";
 import ResetPassword from "../pages/ResetPassword";
 import NewPasswordReset from "../pages/NewPasswordReset";
 import PrivateRoute from "./PrivateRoute";
 import InitialBusiness from "../pages/initials/InitialBusiness";
 import InitialAdmin from "../pages/initials/InitialAdmin";
+import RegisterBusiness from "../pages/registers/RegisterBusiness";
 
 export default function AppRoutes() {
     return (
@@ -19,6 +20,7 @@ export default function AppRoutes() {
                 {/* Login público */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<RegisterUser />} />
+                <Route path="/registro-negocios" element={<RegisterBusiness />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/reset-password/:token" element={<NewPasswordReset />} />
 

@@ -33,7 +33,7 @@ export default function Header({ onToggleSidebar }) {
         </Styled.MenuButton>
         <Styled.TopSection>
           <Styled.LeftLinks>
-            <a href="/central">Central do Negócio</a> <a href="/promote">Promova seu Negócio Também</a>
+            <a href="/central">Central do Negócio</a> <a href="/registro-negocios">Promova seu Negócio Também</a>
           </Styled.LeftLinks>
           <Styled.RightButtons>
             <Styled.ButtonCustom onClick={() => navigate("/register")}>Cadastrar</Styled.ButtonCustom>
