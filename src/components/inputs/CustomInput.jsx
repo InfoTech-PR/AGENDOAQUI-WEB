@@ -24,18 +24,20 @@ const InputWrapper = styled.div`
     color: ${({ theme }) => theme.colors.text};
     padding: 0.8rem 0.75rem;
     border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
 
-    &:focus {
-      border-color: ${({ theme }) => theme.colors.primary};
-      box-shadow: none;
-    }
+  .form-control:focus {
+    background-color: #fff;
+    box-shadow: none;
   }
 
   label {
-    color: ${({ theme }) => theme.colors.placeholder};
+    color: ${({ theme }) => theme.colors.primaryDark};
   }
 
   .form-control:focus ~ label {
     color: ${({ theme }) => theme.colors.primary};
   }
 `;
+

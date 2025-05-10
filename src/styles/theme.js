@@ -1,24 +1,39 @@
-import { darken } from 'polished';
+import { darken, lighten, rgba } from 'polished';
 
-const primaryColor = 'rgba(128, 177, 223, 0.8)';
+const primaryColor = 'rgb(12, 47, 80)';
 
 const theme = {
-    colors: {
-        primary: primaryColor,
-        primaryDark: darken(0.45, primaryColor),
-        primaryTransparent1: 'rgba(36, 93, 146, 0.5)',
-        primaryTransparent2: 'rgba(36, 93, 146, .15)',
-        background: '#000',
-        text: '#000',
-        inputBg: '#fff',
-        inputBorder: primaryColor,
-        placeholder: darken(0.25, primaryColor),
-        linkHover: '#ffa64d',
+  colors: {
+    primary: primaryColor,
+    primaryDark: darken(0.2, primaryColor), 
+    primaryDarkTwo: darken(0.35, primaryColor),
+    primaryLight: lighten(0.15, primaryColor),
+    primaryTransparent1: rgba(primaryColor, 0.5),
+    primaryTransparent2: rgba(primaryColor, 0.15),
 
-        disabledBg: '#f5f5f5',      
-        disabledBorder: '#dcdcdc', 
-        disabledText: '#a8a8a8',    
-    },
+    background: darken(0.45, primaryColor),
+    text: darken(0.8, primaryColor),
+    placeholder: darken(0.25, primaryColor),
+
+    disabledBg: lighten(0.45, primaryColor),
+    disabledBorder: lighten(0.3, primaryColor),
+    disabledText: darken(0.1, primaryColor),
+
+    // Input
+    inputBorder: primaryColor,
+    inputBg: lighten(.65, primaryColor),
+
+    // Card
+    cardLight: lighten(0.65, primaryColor),
+
+    // Link
+    link: lighten(0.95, primaryColor),
+    linkHover: lighten(0.55, primaryColor),
+
+    // Button
+    button: lighten(0.2, primaryColor),
+    buttonHover: lighten(0.05, primaryColor),
+  },
 };
 
 export default theme;

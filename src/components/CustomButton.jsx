@@ -21,7 +21,7 @@ const spin = keyframes`
 `;
 
 const Button = styled.button`
-  background-color: ${({ theme, variant }) => theme.colors[variant]};
+  background-color: ${({ theme }) => theme.colors.button};
   color: #FFF;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -39,7 +39,7 @@ const Button = styled.button`
   align-self: center;
 
   &:hover {
-    background-color: ${({ theme, variant }) => theme.colors[`${variant}Dark`] || theme.colors[variant]};
+    background-color: ${({ theme }) => theme.colors.buttonHover};
   }
 
   &:disabled {

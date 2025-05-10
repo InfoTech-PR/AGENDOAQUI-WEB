@@ -349,7 +349,6 @@ const Styled = {
 		width: 100%;
 		justify-content: space-between;
 		border-radius: 8px;
-		background-color: ${({ theme }) => theme.colors.primaryDark};
 		padding: 1rem;
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	`,
@@ -399,40 +398,40 @@ const Styled = {
 
 	LocationSection: styled.div`
 		border-radius: 8px;
-		background-color: ${({ theme }) => theme.colors.primary};
+		background-color: ${({ theme }) => theme.colors.cardLight};
 		padding: 1rem;
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	`,
 
 	LocationSectionContent: styled.div`
-    display: flex;
-    flex-direction: row; /* Itens lado a lado por padrão */
-    gap: 2rem;
-    margin-bottom: 2rem;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center; /* Centraliza os itens dentro da LocationSection */
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		margin-bottom: 2rem;
+		width: 100%;
+		justify-content: space-between;
+		align-items: center; 
 
-    @media (max-width: 768px) {
-      flex-direction: column; /* Empurra para coluna em dispositivos menores */
-      gap: 1rem;
-    }
+		@media (max-width: 768px) {
+			flex-direction: column; 
+			gap: 1rem;
+		}
 	`,
 
 	InfoLocation: styled.div`
-		width: 45%; /* Controla a largura da seção de informações */
+		width: 45%; 
 		display: flex;
 		flex-direction: column;
 		align-items: flex-end;
 
 		p {
-		margin: 0.2rem 0;
-		font-size: 1rem;
+			margin: 0.2rem 0;
+			font-size: 1rem;
 		}
 
 		@media (max-width: 768px) {
-		width: 100%;
-		text-align: center;
+			width: 100%;
+			text-align: center;
 		}
 	`,
 
@@ -452,7 +451,6 @@ const Styled = {
 		margin-top: 2rem;
 		border-radius: 8px;
 		padding: 1rem;
-		background-color: ${({ theme }) => theme.colors.primaryDark};
 		box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 		overflow-x: auto;
 
@@ -467,7 +465,7 @@ const Styled = {
 			}
 
 			th {
-				background-color: ${({ theme }) => theme.colors.primary};
+				background-color: ${({ theme }) => theme.colors.cardLight};
 			}
 
 			.highlight {
@@ -511,7 +509,7 @@ const Styled = {
 		}
 
 		.card {
-			background: ${({ theme }) => theme.colors.primary};
+			background: ${({ theme }) => theme.colors.cardLight};
 			border-radius: 8px;
 			box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 			padding: 1rem;
@@ -547,7 +545,7 @@ const Styled = {
 				button {
 					margin-top: auto;
 					padding: 0.5rem 1rem;
-					background-color: ${({ theme }) => theme.colors.primaryDark};
+					background-color: ${({ theme }) => theme.colors.button};
 					border: none;
 					border-radius: 6px;
 					color: white;
@@ -572,7 +570,6 @@ const Styled = {
 
 	PaymentSection: styled.section`
 		margin-top: 2rem;
-		background-color: ${({ theme }) => theme.colors.primaryDark};
 		padding: 1rem;
 		border-radius: 10px;
 		box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -590,7 +587,7 @@ const Styled = {
 		}
 
 		.card {
-			background-color: ${({ theme }) => theme.colors.primary};
+			background-color: ${({ theme }) => theme.colors.cardLight};
 			padding: 1rem;
 			border-radius: 10px;
 			width: 160px;
@@ -645,7 +642,7 @@ const Styled = {
 	Card: styled.div`
 		width: 250px;
 		padding: 1rem;
-		background-color: ${({ theme }) => theme.colors.primaryDark};
+		background-color: ${({ theme }) => theme.colors.cardLight};
 		border-radius: 8px;
 		text-align: center;
 		box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -677,7 +674,7 @@ const Styled = {
 
 		p {
 			font-size: 0.9rem;
-			color: #ccc;
+			color: #fff;
 		}
 	`,
 
@@ -714,89 +711,89 @@ const Styled = {
 	`,
 
 	ReviewsSection: styled.section`
-    padding: 2rem;
-  `,
+	padding: 2rem;
+	`,
 
-  Stats: styled.div`
-    text-align: center;
-    margin-bottom: 2rem;
-  `,
+	Stats: styled.div`
+	text-align: center;
+	margin-bottom: 2rem;
+	`,
 
-  Rating: styled.div`
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	Rating: styled.div`
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-    svg {
-      color: #ffcc00;
-      margin-right: 0.5rem;
-    }
-  `,
+	svg {
+		color: #ffcc00;
+		margin-right: 0.5rem;
+	}
+	`,
 
-  Bookings: styled.div`
-    font-size: 1rem;
-    color: #666;
-  `,
+	Bookings: styled.div`
+	font-size: 1rem;
+	color: #666;
+	`,
 
-  ReviewCards: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  `,
+	ReviewCards: styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	`,
 
-  ReviewCard: styled.div`
-    display: flex;
-    padding: 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  `,
+	ReviewCard: styled.div`
+	display: flex;
+	padding: 1rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	`,
 
-  UserDetails: styled.div`
-    display: flex;
-    gap: 1rem;
-    width: 30%;
-  `,
+	UserDetails: styled.div`
+	display: flex;
+	gap: 1rem;
+	width: 30%;
+	`,
 
-  UserImage: styled.img`
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-  `,
+	UserImage: styled.img`
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	`,
 
-  UserInfo: styled.div`
-    display: flex;
-    flex-direction: column;
-  `,
+	UserInfo: styled.div`
+	display: flex;
+	flex-direction: column;
+	`,
 
-  UserName: styled.span`
-    font-weight: bold;
-  `,
+	UserName: styled.span`
+	font-weight: bold;
+	`,
 
-  ReviewDate: styled.span`
-    font-size: 0.9rem;
-    color: #666;
-  `,
+	ReviewDate: styled.span`
+	font-size: 0.9rem;
+	color: #666;
+	`,
 
-  Service: styled.span`
-    font-size: 0.9rem;
-    color: #333;
-  `,
+	Service: styled.span`
+	font-size: 0.9rem;
+	color: #333;
+	`,
 
-  Comment: styled.p`
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: #333;
-    width: 70%;
-  `,
+	Comment: styled.p`
+	margin-top: 1rem;
+	font-size: 1rem;
+	color: #333;
+	width: 70%;
+	`,
 
-  RatingStars: styled.div`
-    display: flex;
-    gap: 0.2rem;
-    margin-top: 0.5rem;
-    color: #ffcc00;
-  `,
+	RatingStars: styled.div`
+	display: flex;
+	gap: 0.2rem;
+	margin-top: 0.5rem;
+	color: #ffcc00;
+	`,
 };

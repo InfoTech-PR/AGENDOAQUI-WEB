@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import defaultUserImg from "/user.png";
 import { FaBars } from "react-icons/fa";
+import { CustomButton, CustomLink } from '../components'
 
 export default function Header({ onToggleSidebar }) {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -31,15 +32,19 @@ export default function Header({ onToggleSidebar }) {
         <Styled.MenuButton onClick={onToggleSidebar}>
           <FaBars />
         </Styled.MenuButton>
+
         <Styled.TopSection>
-          <Styled.LeftLinks>
-            <a href="/central">Central do Negócio</a> <a href="/registro-negocios">Promova seu Negócio Também</a>
-          </Styled.LeftLinks>
+          <Styled.LinkGroup>
+            <CustomLink href="/central">Central do Negócio</CustomLink>
+            <CustomLink href="/registro-negocios">Promova seu Negócio Também!</CustomLink>
+          </Styled.LinkGroup>
           <Styled.RightButtons>
-            <Styled.ButtonCustom onClick={() => navigate("/register")}>Cadastrar</Styled.ButtonCustom>
-            <Styled.ButtonCustom onClick={() => navigate("/login")}>Entrar</Styled.ButtonCustom>
+            <CustomButton onClick={() => navigate("/register")}>Cadastrar</CustomButton>
+            <CustomButton onClick={() => navigate("/login")}>Entrar</CustomButton>
           </Styled.RightButtons>
+
         </Styled.TopSection>
+
         <Styled.BottomSection>
           <Styled.ImageWrapper>
             <img
@@ -79,7 +84,7 @@ export default function Header({ onToggleSidebar }) {
 
 const Styled = {
   Header: styled.header`
-    background-color:rgb(131, 131, 131);
+    background-color:${({ theme }) => theme.colors.primary};
     color: white;
     border-radius: 12px;
     padding: 1rem;
@@ -103,18 +108,21 @@ const Styled = {
       width: 100%;
     }
   `,
-  LeftLinks: styled.div`
+  LinkGroup: styled.div`
+    display: flex;
+    gap: 1.5rem;
+
     a {
-      color: white;
-      margin-right: 1rem;
-      text-decoration: none;
+      font-size: 1.1rem;
+      margin: 0;
+    }
 
-      &:hover {
-        text-decoration: underline;
-      }
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: center;
 
-      @media (max-width: 600px) {
-        display: none; 
+      a {
+        font-size: 1rem;
       }
     }
   `,
@@ -164,18 +172,6 @@ const Styled = {
       @media (max-width: 600px) {
         font-size: 0.9rem;
       }
-    }
-  `,
-  ButtonCustom: styled.button`
-    background-color: #3a3a3a;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #505050;
     }
   `,
   HeaderContainer: styled.header`

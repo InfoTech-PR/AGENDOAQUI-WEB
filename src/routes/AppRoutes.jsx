@@ -19,13 +19,14 @@ export default function AppRoutes() {
             <Routes>
                 {/* Login público */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<RegisterUser />} />
-                <Route path="/registro-negocios" element={<RegisterBusiness />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/reset-password/:token" element={<NewPasswordReset />} />
-
                 <Route path="/" element={<InitialSystem />} />
                 <Route path="/business" element={<InitialBusiness />} />
+                
+                {/* Registros */}
+                <Route path="/register" element={<RegisterUser />} />
+                <Route path="/registro-negocios" element={<RegisterBusiness />} />
 
                 <Route path="/admin" element={<PrivateRoute requiredRole="admin" ><InitialAdmin /></PrivateRoute>} />
                 {/* <Route path="/admin" element={<PrivateRoute requiredRole="guest" ><InitialAdmin /> </PrivateRoute>} /> */}

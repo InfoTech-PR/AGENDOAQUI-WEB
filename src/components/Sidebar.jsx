@@ -95,7 +95,7 @@ export default function Sidebar({ isOpen, onClose }) {
 const SidebarContainer = styled.aside`
   width: 240px;
   height: 100vh;
-  background-color:rgb(131, 131, 131);
+  background-color:${({ theme }) => theme.colors.primary};
   color: white;
   padding: 1rem;
   position: fixed;
@@ -124,7 +124,7 @@ const Footer = styled.div`
   margin-top: auto;
   padding: 16px;
   font-size: 12px;
-  color: #999;
+  color: ${({ theme }) => theme.colors.link};;
   text-align: center;
 
   .footer-logos {
@@ -153,7 +153,8 @@ const NavItem = styled.li`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ selected }) => !selected && "#1a1a1a"};
+    background-color: ${({ theme, selected }) =>
+      !selected ? theme.colors.buttonHover : "inherit"};
   }
 `;
 
