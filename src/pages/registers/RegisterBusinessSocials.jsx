@@ -1,23 +1,37 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect } from "../../components";
-import { auth, googleProvider, facebookProvider, signInWithPopup } from "../../utils/firebase";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { registerBusiness } from "../../services/business";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function RegisterBusiness() {
+export default function RegisterBusinessSocial() {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" });
     const [loading, setLoading] = useState(false);
-    const isFormIncomplete = !formData.name.trim() || !formData.category.trim() || !formData.user.trim() || !formData.password.trim() || (!formData.email.trim() && !formData.phone.trim());
+    const [isGoogleOrFacebookLogin, setIsGoogleOrFacebookLogin] = useState(false);
+    const { userData } = location.state || {};
+    const isFormIncomplete = !formData.name.trim() || !formData.category.trim() || !formData.user.trim() || (!formData.email.trim() && !formData.phone.trim());
     const [modal, setModal] = useState({ show: false, type: "info", message: "" });
     const sanitizePhone = (phone) => phone.replace(/\D/g, '');
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (userData) {
+            setFormData((prev) => ({
+                ...prev,
+                email: userData.email || '',
+                phone: userData.phone || '',
+                user: userData.name || '',
+                password: userData.password || '',
+            }));
+            setIsGoogleOrFacebookLogin(true);
+        }
+    }, [userData]);
 
     function handleChange(e) {
         setFormData({
-          ...formData,
-          [e.target.name]: e.target.value,
+            ...formData,
+            [e.target.name]: e.target.value,
         });
     }
 
@@ -30,61 +44,30 @@ export default function RegisterBusiness() {
             phone: sanitizePhone(formData.phone),
         };
 
+        console.log(sanitizedData)
+
         try {
             const response = await registerBusiness(sanitizedData);
             setModal({
                 show: true,
                 type: "success",
                 message: response.data.message,
-              });
+            });
+            setTimeout(() => {
+                navigate("/");
+            }, 3000);
         } catch (error) {
             console.log(error);
             setModal({
                 show: true,
                 type: "error",
                 message: error.response.data.message,
-              });
+            });
         } finally {
             setLoading(false);
         }
     }
 
-    async function handleGoogleLogin() {
-        try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-
-            const userData = {
-                name: user.displayName || '',
-                email: user.email || '', 
-                phone: user.phoneNumber || '',
-                password: user.accessToken || '',
-            };
-            navigate("/registro-negocios-social", { state: { userData } });
-    
-        } catch (error) {
-            console.error("Erro no login com Google:", error);
-        }
-    }
-    
-    async function handleFacebookLogin() {
-        try {
-            const result = await signInWithPopup(auth, facebookProvider);
-            const user = result.user;
-            
-            const userData = {
-                name: user.displayName || '',
-                email: user.email || '', 
-                phone: user.phoneNumber || '',
-                password: user.accessToken || '',
-            };
-            navigate("/registro-negocios-social", { state: { userData } });
-            
-        } catch (error) {
-            console.error("Erro no login com Facebook:", error);
-        }
-    }
-      
     return (
         <Styled.RegisterPage>
             <Styled.Container>
@@ -103,17 +86,11 @@ export default function RegisterBusiness() {
                         />
 
                         <CustomSelect
-                            options={[
-                                { label: "Opção 1", value: "1" },
-                                { label: "Opção 2", value: "2" },
-                                { label: "Opção 3", value: "3" }
-                            ]}
+                            options={[{ label: "Opção 1", value: "1" }, { label: "Opção 2", value: "2" }, { label: "Opção 3", value: "3" }]}
                             value={formData.category}
-                            onChange={(e) => {
-                                setFormData({ ...formData, category: e.target.value });
-                            }}
-                            loading={loading} 
-                            variant="primary" 
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                            loading={loading}
+                            variant="primary"
                         />
 
                         <CustomInput
@@ -121,6 +98,7 @@ export default function RegisterBusiness() {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
+                            disabled={isGoogleOrFacebookLogin}
                         />
 
                         <PhoneInput
@@ -128,22 +106,16 @@ export default function RegisterBusiness() {
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
+                            disabled={isGoogleOrFacebookLogin}
                         />
 
                         <CustomInput
-                            label="Usuario"
+                            label="Usuário"
                             name="user"
                             value={formData.user}
                             onChange={handleChange}
                             required
-                        />
-
-                        <PasswordInput
-                            label="Senha"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
+                            disabled={isGoogleOrFacebookLogin} 
                         />
 
                         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -151,15 +123,6 @@ export default function RegisterBusiness() {
                                 Cadastrar
                             </CustomButton>
                         </div>
-
-                        <Styled.SocialButtons>
-                            <CustomButton onClick={handleFacebookLogin}>
-                                <FaFacebook /> Facebook
-                            </CustomButton>
-                            <CustomButton onClick={handleGoogleLogin}>
-                                <FaGoogle /> Google
-                            </CustomButton>
-                        </Styled.SocialButtons>
 
                         <hr className="my-4 border-light" />
 
@@ -183,32 +146,32 @@ const Styled = {
       display: flex;
       flex-direction: column;
     `,
-  
+
     Container: styled.div`
       flex: 1;
       display: flex;
       flex-direction: row;
       height: 100%;
     `,
-  
+
     LeftPanel: styled.div`
       flex: 7;
       background: url('/logomarca-dark.png') center center no-repeat;
       background-size: contain;
       display: none;
-  
+
       @media (min-width: 768px) {
         display: block;
       }
     `,
-  
+
     RightPanel: styled.div`
       background-color: ${({ theme }) => theme.colors.primary};
       flex: 3;
       padding: 2rem;
       overflow-y: auto;
     `,
-  
+
     Title: styled.h2`
       text-align: left;
       margin-bottom: 1rem;
@@ -221,28 +184,4 @@ const Styled = {
         text-align: left;
         margin-bottom: 1.5rem;
     `,
-  
-    ErrorMsg: styled.p`
-      color: red;
-      font-size: 0.875rem;
-      margin-top: -0.5rem;
-      margin-bottom: 0.75rem;
-    `,
-  
-    SocialButtons: styled.div`
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 1rem;
-        margin: 1rem 0;
-    
-        button {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        }
-    `,
-  };
-  
+};

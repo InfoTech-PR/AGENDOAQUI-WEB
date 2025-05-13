@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FloatingLabel, Form } from "react-bootstrap";
 
-export default function CustomInput({ label, type = "text", name, value, onChange, required = false, placeholder = "", controlId }) {
+export default function CustomInput({ label, type = "text", name, value, onChange, required = false, placeholder = "", controlId, disabled = false, }) {
   return (
     <InputWrapper as={FloatingLabel} controlId={controlId || name} label={label} className="mb-3">
       <Form.Control
@@ -12,6 +12,7 @@ export default function CustomInput({ label, type = "text", name, value, onChang
         value={value}
         onChange={onChange}
         required={required}
+        disabled={disabled}
       />
     </InputWrapper>
   );

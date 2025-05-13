@@ -12,6 +12,7 @@ import PrivateRoute from "./PrivateRoute";
 import InitialBusiness from "../pages/initials/InitialBusiness";
 import InitialAdmin from "../pages/initials/InitialAdmin";
 import RegisterBusiness from "../pages/registers/RegisterBusiness";
+import RegisterBusinessSocials from "../pages/registers/RegisterBusinessSocials";
 
 export default function AppRoutes() {
     return (
@@ -27,6 +28,7 @@ export default function AppRoutes() {
                 {/* Registros */}
                 <Route path="/register" element={<RegisterUser />} />
                 <Route path="/registro-negocios" element={<RegisterBusiness />} />
+                <Route path="/registro-negocios-social" element={<RegisterBusinessSocials />} />
 
                 <Route path="/admin" element={<PrivateRoute requiredRole="admin" ><InitialAdmin /></PrivateRoute>} />
                 {/* <Route path="/admin" element={<PrivateRoute requiredRole="guest" ><InitialAdmin /> </PrivateRoute>} /> */}
@@ -38,6 +40,9 @@ export default function AppRoutes() {
                 {/* Rota protegida */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                
+                {/* <Route path="/termos-servico" element={<TermosServico />} /> */}
+                {/* <Route path="/privacy-politics" element={<PolicyPrivatics />} /> */}
             </Routes>
         </Router>
     );
