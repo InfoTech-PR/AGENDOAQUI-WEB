@@ -3,22 +3,14 @@ import { useState } from "react";
 import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect } from "../../components";
 import { auth, googleProvider, facebookProvider, signInWithPopup } from "../../utils/firebase";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
+import { registerBusiness } from "../../services/business";
 
 export default function RegisterBusiness() {
-    const [formData, setFormData] = useState({
-        name: "",
-        categoria: "",
-        email: "",
-        phone: "",
-        user: "",
-        password: ""
-    });
-    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" });
     const [loading, setLoading] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("");
-    const isFormIncomplete = Object.entries(formData).filter(([key]) => key !== "phone" && key !== "email").some(([, value]) => !value.trim());
+    const isFormIncomplete = !formData.name.trim() || !formData.category.trim() || !formData.user.trim() || !formData.password.trim() || (!formData.email.trim() && !formData.phone.trim());
     const [modal, setModal] = useState({ show: false, type: "info", message: "" });
-
+    const sanitizePhone = (phone) => phone.replace(/\D/g, '');
 
     function handleChange(e) {
         setFormData({
@@ -27,9 +19,32 @@ export default function RegisterBusiness() {
         });
     }
 
-    function submitData(e) {
+    async function submitData(e) {
         e.preventDefault();
-        console.log("Dados enviados:", formData);
+        setLoading(true);
+        
+        const sanitizedData = {
+            ...formData,
+            phone: sanitizePhone(formData.phone),
+        };
+
+        try {
+            const response = await registerBusiness(sanitizedData);
+            setModal({
+                show: true,
+                type: "success",
+                message: response.data.message,
+              });
+        } catch (error) {
+            console.log(error);
+            setModal({
+                show: true,
+                type: "error",
+                message: error.response.data.message,
+              });
+        } finally {
+            setLoading(false);
+        }
     }
 
     async function handleGoogleLogin() {
@@ -75,8 +90,10 @@ export default function RegisterBusiness() {
                                 { label: "Opção 2", value: "2" },
                                 { label: "Opção 3", value: "3" }
                             ]}
-                            value={selectedOption}
-                            onChange={(e) => setSelectedOption(e.target.value)}
+                            value={formData.category}
+                            onChange={(e) => {
+                                setFormData({ ...formData, category: e.target.value });
+                            }}
                             loading={loading} 
                             variant="primary" 
                         />
@@ -87,7 +104,6 @@ export default function RegisterBusiness() {
                             value={formData.email}
                             onChange={handleChange}
                         />
-                        {errors.email && <Styled.ErrorMsg>{errors.email}</Styled.ErrorMsg>}
 
                         <PhoneInput
                             label="Telefone"
@@ -95,7 +111,6 @@ export default function RegisterBusiness() {
                             value={formData.phone}
                             onChange={handleChange}
                         />
-                        {errors.phone && <Styled.ErrorMsg>{errors.phone}</Styled.ErrorMsg>}
 
                         <CustomInput
                             label="Usuario"
@@ -112,7 +127,6 @@ export default function RegisterBusiness() {
                             onChange={handleChange}
                             required
                         />
-                        {errors.password && <Styled.ErrorMsg>{errors.password}</Styled.ErrorMsg>}
 
                         <div style={{ display: "flex", justifyContent: "center" }}>
                             <CustomButton type="submit" loading={loading} disabled={isFormIncomplete}>
@@ -132,8 +146,6 @@ export default function RegisterBusiness() {
                         <hr className="my-4 border-light" />
 
                         <CustomLink href="/">Seu Negócio já está cadastrado? Entre Aqui!</CustomLink>
-
-                        {errors.general && (<Styled.ErrorMsg className="text-center mt-2">{errors.general}</Styled.ErrorMsg>)}
                     </form>
                     <CustomModal
                         show={modal.show}

@@ -16,6 +16,8 @@ export default function PasswordInput({ label = "Senha", name, value, onChange, 
           name={name}
           onChange={onChange}
           required={required}
+          pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+          title="A senha deve ter no mínimo 8 caracteres, incluindo letra, número e caractere especial."
         />
       </StyledFloating>
       <ToggleButton type="button" onClick={() => setMostrarSenha(prev => !prev)}>
