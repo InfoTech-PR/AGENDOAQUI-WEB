@@ -35,7 +35,7 @@ export default function Header({ onToggleSidebar }) {
 
         <Styled.TopSection>
           <Styled.LinkGroup>
-            <CustomLink href="/central">Central do Negócio</CustomLink>
+            <CustomLink href="/login-negocios">Central do Negócio</CustomLink>
             <CustomLink href="/registro-negocios">Promova seu Negócio Também!</CustomLink>
           </Styled.LinkGroup>
           <Styled.RightButtons>

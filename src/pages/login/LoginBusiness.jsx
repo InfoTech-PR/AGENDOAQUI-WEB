@@ -1,18 +1,17 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect, ContactModal } from "../../components";
+import { CustomModal, PasswordInput, CustomInput, CustomButton, CustomLink, ContactModal } from "../../components";
 import { auth, googleProvider, facebookProvider, signInWithPopup } from "../../utils/firebase";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
-import { registerBusiness } from "../../services/business";
+import { loginBusiness } from "../../services/business";
 import { useNavigate } from "react-router-dom";
 
-export default function RegisterBusiness() {
-    const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" });
+export default function LoginBusiness() {
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
-    const isFormIncomplete = !formData.name.trim() || !formData.category.trim() || !formData.user.trim() || !formData.password.trim() || (!formData.email.trim() && !formData.phone.trim());
+    const isFormIncomplete = !formData.password.trim() || (!formData.email.trim());
     const [modal, setModal] = useState({ show: false, type: "info", message: "" });
     const [showContactModal, setShowContactModal] = useState(false);
-    const sanitizePhone = (phone) => phone.replace(/\D/g, '');
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -25,15 +24,18 @@ export default function RegisterBusiness() {
     async function submitData(e) {
         e.preventDefault();
         setLoading(true);
-        
-        const sanitizedData = {
-            ...formData,
-            phone: sanitizePhone(formData.phone),
-        };
-
         try {
-            await registerBusiness(sanitizedData);
-            setShowContactModal(true);
+            const response = await loginBusiness(user, password);
+            // se ainda n for ativo chama essa modal
+            if (response) {
+                setModal({
+                    show: true,
+                    type: "success",
+                    message: response.data.message,
+                  });
+            } else {
+                setShowContactModal(true);
+            }
         } catch (error) {
             console.log(error);
             setModal({
@@ -87,52 +89,15 @@ export default function RegisterBusiness() {
             <Styled.Container>
                 <Styled.LeftPanel/>
                 <Styled.RightPanel>
-                    <Styled.Title>Cadastre-se!</Styled.Title>
-                    <Styled.Text>Cadastre suas informações para promover seu negócio na nossa plataforma.</Styled.Text>
+                    <Styled.Title>Entre!</Styled.Title>
+                    <Styled.Text>Informe o usuário e senha do seu negócio para entrar na Central do Negócio</Styled.Text>
 
                     <form onSubmit={submitData}>
-                        <CustomInput
-                            label="Nome"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
-
-                        <CustomSelect
-                            options={[
-                                { label: "Opção 1", value: "1" },
-                                { label: "Opção 2", value: "2" },
-                                { label: "Opção 3", value: "3" }
-                            ]}
-                            value={formData.category}
-                            onChange={(e) => {
-                                setFormData({ ...formData, category: e.target.value });
-                            }}
-                            loading={loading} 
-                            variant="primary" 
-                        />
-
                         <CustomInput
                             label="Email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                        />
-
-                        <PhoneInput
-                            label="Telefone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                        />
-
-                        <CustomInput
-                            label="Usuario"
-                            name="user"
-                            value={formData.user}
-                            onChange={handleChange}
-                            required
                         />
 
                         <PasswordInput
@@ -145,7 +110,7 @@ export default function RegisterBusiness() {
 
                         <div style={{ display: "flex", justifyContent: "center" }}>
                             <CustomButton type="submit" loading={loading} disabled={isFormIncomplete}>
-                                Cadastrar
+                                Entrar
                             </CustomButton>
                         </div>
 
@@ -160,7 +125,10 @@ export default function RegisterBusiness() {
 
                         <hr className="my-4 border-light" />
 
-                        <CustomLink href="/login-negocios">Seu Negócio já está cadastrado? Entre Aqui!</CustomLink>
+                        <CustomLink href="/registro-negocios">
+                            É novo aqui?<br/>
+                            Cadastre Seu Negócio!
+                        </CustomLink>
                     </form>
                     <CustomModal
                         show={modal.show}

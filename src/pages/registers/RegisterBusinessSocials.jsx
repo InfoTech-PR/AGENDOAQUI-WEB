@@ -117,7 +117,7 @@ export default function RegisterBusinessSocial() {
 
                         <hr className="my-4 border-light" />
 
-                        <CustomLink href="/">Seu Negócio já está cadastrado? Entre Aqui!</CustomLink>
+                        <CustomLink href="/login-negocios">Seu Negócio já está cadastrado? Entre Aqui!</CustomLink>
                     </form>
                     <CustomModal
                         show={modal.show}
