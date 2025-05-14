@@ -5,9 +5,11 @@ import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 
 const ContactModal = ({ show, onHide }) => {
   const handleWhatsApp = () => {
-    window.open("https://wa.me/554196801186", "_blank");
+    const phone = "554196801186"; 
+    const message = encodeURIComponent("Olá, finalizei meu cadastro no AgendoAqui. Poderiam aprovar minha conta?");
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
   };
-
+  
   const handleEmail = () => {
     window.location.href = "mailto:paulo@infotech-solucoes.com";
   };
