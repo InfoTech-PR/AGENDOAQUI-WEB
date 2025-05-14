@@ -1,18 +1,18 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect } from "../../components";
+import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect, ContactModal } from "../../components";
 import { registerBusiness } from "../../services/business";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function RegisterBusinessSocial() {
     const location = useLocation();
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [isGoogleOrFacebookLogin, setIsGoogleOrFacebookLogin] = useState(false);
     const { userData } = location.state || {};
     const isFormIncomplete = !formData.name.trim() || !formData.category.trim() || !formData.user.trim() || (!formData.email.trim() && !formData.phone.trim());
     const [modal, setModal] = useState({ show: false, type: "info", message: "" });
+    const [showContactModal, setShowContactModal] = useState(false);
     const sanitizePhone = (phone) => phone.replace(/\D/g, '');
 
     useEffect(() => {
@@ -44,18 +44,9 @@ export default function RegisterBusinessSocial() {
             phone: sanitizePhone(formData.phone),
         };
 
-        console.log(sanitizedData)
-
         try {
-            const response = await registerBusiness(sanitizedData);
-            setModal({
-                show: true,
-                type: "success",
-                message: response.data.message,
-            });
-            setTimeout(() => {
-                navigate("/");
-            }, 3000);
+            await registerBusiness(sanitizedData);
+            setShowContactModal(true);
         } catch (error) {
             console.log(error);
             setModal({
@@ -134,6 +125,7 @@ export default function RegisterBusinessSocial() {
                         message={modal.message}
                         onHide={() => setModal({ ...modal, show: false })}
                     />
+                    <ContactModal show={showContactModal} onHide={() => setShowContactModal(false)} />
                 </Styled.RightPanel>
             </Styled.Container>
         </Styled.RegisterPage>
