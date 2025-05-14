@@ -5,7 +5,6 @@ import { auth, googleProvider, facebookProvider, signInWithPopup } from "../../u
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { registerBusiness } from "../../services/business";
 import { useLocation, useNavigate } from "react-router-dom";
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 export default function RegisterBusiness() {
     const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" });
@@ -68,17 +67,21 @@ export default function RegisterBusiness() {
         }
     }
     
-    function handleFacebookResponse(response) {
-        if (response.accessToken) {
+    async function handleFacebookLogin() {
+        try {
+            const result = await signInWithPopup(auth, facebookProvider);
+            const user = result.user;
+            
             const userData = {
-                name: response.name || '',
-                email: response.email || '',
-                phone: '', // Facebook normalmente não fornece telefone direto
-                password: response.accessToken,
+                name: user.displayName || '',
+                email: user.email || '', 
+                phone: user.phoneNumber || '',
+                password: user.accessToken || '',
             };
             navigate("/registro-negocios-social", { state: { userData } });
-        } else {
-            console.error("Erro no login com Facebook:", response);
+            
+        } catch (error) {
+            console.error("Erro no login com Facebook:", error);
         }
     }
       
@@ -150,17 +153,9 @@ export default function RegisterBusiness() {
                         </div>
 
                         <Styled.SocialButtons>
-                            <FacebookLogin
-                                appId="579855421798901"
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                callback={handleFacebookResponse}
-                                render={renderProps => (
-                                    <CustomButton onClick={renderProps.onClick}>
-                                        <FaFacebook /> Facebook
-                                    </CustomButton>
-                                )}
-                            />
+                            <CustomButton onClick={handleFacebookLogin}>
+                                <FaFacebook /> Facebook
+                            </CustomButton>
                             <CustomButton onClick={handleGoogleLogin}>
                                 <FaGoogle /> Google
                             </CustomButton>
