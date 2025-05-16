@@ -1,17 +1,16 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect, ContactModal } from "../../components";
+import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect } from "../../components";
 import { auth, googleProvider, facebookProvider, signInWithPopup } from "../../utils/firebase";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { registerBusiness } from "../../services/business";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterBusiness() {
-    const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" });
+    const [formData, setFormData] = useState({ name: "", category: "", email: "", phone: "", user: "", password: "" , token: ""});
     const [loading, setLoading] = useState(false);
     const isFormIncomplete = !formData.name.trim() || !formData.category.trim() || !formData.user.trim() || !formData.password.trim() || (!formData.email.trim() && !formData.phone.trim());
     const [modal, setModal] = useState({ show: false, type: "info", message: "" });
-    const [showContactModal, setShowContactModal] = useState(false);
     const sanitizePhone = (phone) => phone.replace(/\D/g, '');
     const navigate = useNavigate();
 
@@ -32,8 +31,12 @@ export default function RegisterBusiness() {
         };
 
         try {
-            await registerBusiness(sanitizedData);
-            setShowContactModal(true);
+            const response = await registerBusiness(sanitizedData);
+            setModal({
+                show: true,
+                type: "success",
+                message: response.data.message,
+            });
         } catch (error) {
             console.log(error);
             setModal({
@@ -55,7 +58,7 @@ export default function RegisterBusiness() {
                 name: user.displayName || '',
                 email: user.email || '', 
                 phone: user.phoneNumber || '',
-                password: user.accessToken || '',
+                token: user.accessToken || '',
             };
             navigate("/registro-negocios-social", { state: { userData } });
     
@@ -73,7 +76,7 @@ export default function RegisterBusiness() {
                 name: user.displayName || '',
                 email: user.email || '', 
                 phone: user.phoneNumber || '',
-                password: user.accessToken || '',
+                token: user.accessToken || '',
             };
             navigate("/registro-negocios-social", { state: { userData } });
             
@@ -168,7 +171,6 @@ export default function RegisterBusiness() {
                         message={modal.message}
                         onHide={() => setModal({ ...modal, show: false })}
                     />
-                    <ContactModal show={showContactModal} onHide={() => setShowContactModal(false)} />
                 </Styled.RightPanel>
             </Styled.Container>
         </Styled.RegisterPage>
@@ -192,7 +194,7 @@ const Styled = {
     LeftPanel: styled.div`
       flex: 7;
       background: url('/logomarca-dark.png') center center no-repeat;
-      background-size: contain;
+      background-size: 80%;
       display: none;
   
       @media (min-width: 768px) {

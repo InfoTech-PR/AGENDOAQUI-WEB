@@ -1,18 +1,15 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { CustomModal, PasswordInput, CustomInput, CustomButton, CustomLink, ContactModal } from "../../components";
+import { CustomModal, PasswordInput, CustomInput, CustomButton, CustomLink } from "../../components";
 import { auth, googleProvider, facebookProvider, signInWithPopup } from "../../utils/firebase";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { loginBusiness } from "../../services/business";
-import { useNavigate } from "react-router-dom";
 
 export default function LoginBusiness() {
-    const [formData, setFormData] = useState({ email: "", password: "" });
+    const [formData, setFormData] = useState({ email: "", password: "", token: "" });
     const [loading, setLoading] = useState(false);
     const isFormIncomplete = !formData.password.trim() || (!formData.email.trim());
     const [modal, setModal] = useState({ show: false, type: "info", message: "" });
-    const [showContactModal, setShowContactModal] = useState(false);
-    const navigate = useNavigate();
 
     function handleChange(e) {
         setFormData({
@@ -25,16 +22,14 @@ export default function LoginBusiness() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await loginBusiness(user, password);
-            // se ainda n for ativo chama essa modal
+            const response = await loginBusiness(formData.email, formData.password, null);
+            //remover essa mensagem e entrar direto na pagina
             if (response) {
                 setModal({
                     show: true,
                     type: "success",
                     message: response.data.message,
-                  });
-            } else {
-                setShowContactModal(true);
+                });
             }
         } catch (error) {
             console.log(error);
@@ -52,17 +47,24 @@ export default function LoginBusiness() {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
+            const tokenId = await user.getIdToken();
 
-            const userData = {
-                name: user.displayName || '',
-                email: user.email || '', 
-                phone: user.phoneNumber || '',
-                password: user.accessToken || '',
-            };
-            navigate("/registro-negocios-social", { state: { userData } });
-    
+            const response = await loginBusiness(user.email, null, tokenId);
+            //remover essa mensagem e entrar direto na pagina
+            if (response) {
+                setModal({
+                    show: true,
+                    type: "success",
+                    message: response.data.message,
+                  });
+            }
         } catch (error) {
             console.error("Erro no login com Google:", error);
+            setModal({
+                show: true,
+                type: "error",
+                message: error.response.data.message,
+              });
         }
     }
     
@@ -70,17 +72,25 @@ export default function LoginBusiness() {
         try {
             const result = await signInWithPopup(auth, facebookProvider);
             const user = result.user;
-            
-            const userData = {
-                name: user.displayName || '',
-                email: user.email || '', 
-                phone: user.phoneNumber || '',
-                password: user.accessToken || '',
-            };
-            navigate("/registro-negocios-social", { state: { userData } });
+            const tokenId = await user.getIdToken();
+
+            const response = await loginBusiness(user.email, null, tokenId);
+            //remover essa mensagem e entrar direto na pagina
+            if (response) {
+                setModal({
+                    show: true,
+                    type: "success",
+                    message: response.data.message,
+                  });
+            }
             
         } catch (error) {
             console.error("Erro no login com Facebook:", error);
+            setModal({
+                show: true,
+                type: "error",
+                message: error.response.data.message,
+              });
         }
     }
       
@@ -136,7 +146,6 @@ export default function LoginBusiness() {
                         message={modal.message}
                         onHide={() => setModal({ ...modal, show: false })}
                     />
-                    <ContactModal show={showContactModal} onHide={() => setShowContactModal(false)} />
                 </Styled.RightPanel>
             </Styled.Container>
         </Styled.RegisterPage>
@@ -160,7 +169,7 @@ const Styled = {
     LeftPanel: styled.div`
       flex: 7;
       background: url('/logomarca-dark.png') center center no-repeat;
-      background-size: contain;
+      background-size: 80%;
       display: none;
   
       @media (min-width: 768px) {
