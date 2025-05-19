@@ -58,7 +58,7 @@ export default function InitialSystem() {
         (error) => {
           setUserLocation("error");
           setLoading(false);
-          console.error("Erro ao obter localização:", error.message);
+          // console.error("Erro ao obter localização:", error.message);
         }
       );
     } else {
@@ -271,20 +271,23 @@ const Styled = {
     overflow-x: auto;
   `,
 
-  ArrowButton: styled.button`
+  ArrowButton: styled.button.attrs(props => ({
+    'data-left': props.left ? true : undefined,
+    'data-right': props.right ? true : undefined,
+  }))`
     background: none;
     border: none;
     font-size: 2rem;
     cursor: pointer;
     color: #333;
-
-    ${({ left }) => left && `
+  
+    &[data-left] {
       margin-right: 1rem;
-    `}
-
-    ${({ right }) => right && `
+    }
+  
+    &[data-right] {
       margin-left: 1rem;
-    `}
+    }
   `,
 
   Header: styled.header`

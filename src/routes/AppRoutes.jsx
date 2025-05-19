@@ -7,6 +7,7 @@ import InitialBusiness from "../pages/initials/InitialBusiness";
 import RegisterBusiness from "../pages/registers/RegisterBusiness";
 import RegisterBusinessSocials from "../pages/registers/RegisterBusinessSocials";
 import LoginBusiness from "../pages/login/LoginBusiness";
+import ClientList from "../pages/client/ClientList";
 
 export default function AppRoutes() {
     return (
@@ -24,7 +25,7 @@ export default function AppRoutes() {
                 <Route path="/registro-negocios-social" element={<RegisterBusinessSocials />} />
 
                 {/* Rota protegida */}
-                
+                <Route path="/clientes" element={<PrivateRoute requiredRole="admin" ><ClientList /></PrivateRoute>} />
                 
                 {/* Rota de erro */}
                 <Route path="/not-authorized" element={<NotAuthorized />} />

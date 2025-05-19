@@ -45,20 +45,26 @@ export default function Sidebar({ isOpen, onClose }) {
               const Icon = item.icon;
               return (
                 <div key={item.path}>
-                  <NavItem
-                    selected={currentPath.startsWith(item.path)}
-                    onClick={() => item.subItems ? toggleMenu(item.path) : null}
-                  >
-                    <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <NavItem selected={currentPath.startsWith(item.path)}>
+                  {item.subItems ? (
+                    <div onClick={() => toggleMenu(item.path)} style={{ cursor: "pointer" }}>
+                      <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ display: "flex", alignItems: "center" }}>
+                          {Icon && <Icon style={{ marginRight: 8 }} />}
+                          {item.label}
+                        </span>
+                        {expandedMenu === item.path ? <FaChevronDown size={12} /> : <FaChevronRight size={12} />}
+                      </span>
+                    </div>
+                  ) : (
+                    <Link to={item.path} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                       <span style={{ display: "flex", alignItems: "center" }}>
                         {Icon && <Icon style={{ marginRight: 8 }} />}
                         {item.label}
                       </span>
-                      {item.subItems && (
-                        expandedMenu === item.path ? <FaChevronDown size={12} /> : <FaChevronRight size={12} />
-                      )}
-                    </span>
-                  </NavItem>
+                    </Link>
+                  )}
+                </NavItem>
 
                   {item.subItems && expandedMenu === item.path && (
                     item.subItems.map((sub) => {
@@ -124,7 +130,7 @@ const Footer = styled.div`
   margin-top: auto;
   padding: 16px;
   font-size: 12px;
-  color: ${({ theme }) => theme.colors.link};;
+  color: ${({ theme }) => theme.colors.link};
   text-align: center;
 
   .footer-logos {
@@ -147,14 +153,13 @@ const NavItem = styled.li`
   margin: 1rem 0;
   font-weight: bold;
   border-radius: 8px;
-  background-color: ${({ selected, theme }) => selected ? theme.primary : "transparent"};
+  background-color: ${({ selected, theme }) => selected ? theme.colors.primaryDark : "transparent"};
   padding: 0.5rem 1rem;
   transition: background-color 0.2s;
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme, selected }) =>
-      !selected ? theme.colors.buttonHover : "inherit"};
+    background-color: ${({ selected }) => !selected && "#1a1a1a"};
   }
 `;
 

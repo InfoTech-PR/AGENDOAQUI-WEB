@@ -3,7 +3,7 @@ import { FaUserFriends, FaCalendarAlt, FaUserCircle, FaQuestionCircle, FaHistory
 const menu = [
   {
     label: "Clientes",
-    path: "/admin/clientes",
+    path: "/clientes",
     icon: FaUserFriends, 
     role: "admin",
   },
