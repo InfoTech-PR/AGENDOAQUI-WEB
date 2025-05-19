@@ -178,7 +178,7 @@ const Styled = {
     height: 60px;
     width: calc(100% - 2rem);
     margin: 1rem auto;
-    background-color:rgb(131, 131, 131);
+    background-color:${({ theme }) => theme.colors.primary};
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -228,10 +228,10 @@ const Styled = {
     position: absolute;
     top: 50px;
     right: 0;
-    background: #2a2a2a;
+    background-color:${({ theme }) => theme.colors.primary};
     border-radius: 8px;
     padding: 0.5rem 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(21, 24, 63, 0.4);
     z-index: 10;
     min-width: 160px;
   `,
@@ -242,7 +242,7 @@ const Styled = {
     transition: background 0.2s;
 
     &:hover {
-      background: #3a3a3a;
+      background-color:${({ theme }) => theme.colors.primaryDark};
     }
   `,
 };

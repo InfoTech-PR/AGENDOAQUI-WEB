@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <Overlay onClick={onClose} $isOpen={isOpen} $bgColor={theme.primary} />
       <SidebarContainer $isOpen={isOpen}>
         <LogoWrapper>
-          <a href="/home">
+          <a href="/">
             <img src={LogoImage} alt="Logo" />
           </a>
         </LogoWrapper>
