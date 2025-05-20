@@ -3,25 +3,36 @@ import { FaUserFriends, FaCalendarAlt, FaUserCircle, FaQuestionCircle, FaHistory
 const menu = [
   {
     label: "Clientes",
-    path: "/clientes",
-    icon: FaUserFriends, 
+    icon: FaUserFriends,
     role: "admin",
-  },
+    subItems: [
+      {
+        label: "Listar Clientes",
+        path: "/clientes",
+        role: "admin",
+      },
+      {
+        label: "Cadastrar Cliente",
+        path: "/cadastrar-clientes",
+        role: "admin",
+      },
+    ]
+  },  
   {
     label: "Agendamentos",
-    path: "/admin/agendamentos",
+    path: "/agendamentos",
     icon: FaCalendarAlt,
     role: "admin",
   },
   {
     label: "Minha Página",
-    path: "/admin/minha-pagina",
+    path: "/minha-pagina",
     icon: FaUserCircle,
     role: "admin",
   },
   {
     label: "Ajuda",
-    path: "/admin/ajuda",
+    path: "/ajuda",
     icon: FaQuestionCircle, 
     role: "admin",
 	},

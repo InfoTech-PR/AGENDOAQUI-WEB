@@ -169,8 +169,8 @@ const SubItem = styled.div`
   font-size: 0.9rem;
   padding: 0.3rem 0.8rem;
   border-radius: 6px;
-  background-color: ${({ selected, theme }) => selected ? theme.primary : "transparent"};
-  color: ${({ selected, theme }) => (selected ? theme.colors.primary : "#fff")};
+  background-color: ${({ selected, theme }) => (selected ? theme.colors.primaryDark : "transparent")};
+  color: ${({ selected, theme }) => (selected ? theme.colors.link : "#fff")};
   cursor: pointer;
   transition: background-color 0.2s;
 

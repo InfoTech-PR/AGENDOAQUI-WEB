@@ -1,44 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import styled from "styled-components";
 import { CustomInput, CustomButton } from "../../components";
+import { useNavigate } from 'react-router-dom'
+import { getAllClients } from "../../services/clients";
 
 export default function ClientList() {
   const [search, setSearch] = useState("");
+  const [allClients, setAllClients] = useState([]);
+  const [filteredClients, setFilteredClients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const allClients = [
-    {
-      name: "Ana Silva",
-      birthdate: "1990-05-20",
-      phone: "(11) 91234-5678",
-      email: "ana.silva@example.com"
-    },
-    {
-      name: "Carlos Souza",
-      birthdate: null,
-      phone: "(21) 99876-5432",
-      email: "carlos.souza@example.com"
-    },
-    {
-      name: "Beatriz Lima",
-      birthdate: "1985-11-15",
-      phone: null,
-      email: "beatriz.lima@example.com"
-    },
-    {
-      name: "Fernando Alves",
-      birthdate: "1978-03-08",
-      phone: "(31) 98765-4321",
-      email: "fernando.alves@example.com"
+  useEffect(() => {
+    async function fetchClients() {
+      setLoading(true);
+      setError(null);
+      try {
+        const clients = await getAllClients();
+        setAllClients(clients);
+        setFilteredClients(clients);
+      } catch (err) {
+        setError("Erro ao carregar clientes.");
+      } finally {
+        setLoading(false);
+      }
     }
-  ];
 
-  const [filteredClients, setFilteredClients] = useState(allClients);
+    fetchClients();
+  }, []);
 
   const handleSearch = () => {
-    const filtered = allClients.filter(client =>
-      client.name.toLowerCase().includes(search.toLowerCase())
-    ).sort((a, b) => a.name.localeCompare(b.name));
+    const filtered = allClients
+      .filter((client) =>
+        client.name.toLowerCase().includes(search.toLowerCase())
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
     setFilteredClients(filtered);
   };
 
@@ -52,47 +50,65 @@ export default function ClientList() {
       <Styled.Container>
         <Styled.Header>
           <Styled.Title>Clientes</Styled.Title>
-          <CustomButton>+ Adicionar Novos Clientes</CustomButton>
+          <CustomButton onClick={() => navigate("/cadastrar-clientes")}>
+            + Adicionar Novos Clientes
+          </CustomButton>
         </Styled.Header>
 
         <Styled.Filters>
           <CustomInput
-              label="Nome"
-              name="nome"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
+            label="Nome"
+            name="nome"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </Styled.Filters>
 
         <Styled.Buttons>
-          <CustomButton onClick={handleSearch}>Pesquisar</CustomButton>
-          <CustomButton onClick={handleClear}>Limpar Filtros</CustomButton>
+          <CustomButton onClick={handleSearch} disabled={loading}>
+            Pesquisar
+          </CustomButton>
+          <CustomButton onClick={handleClear} disabled={loading}>
+            Limpar Filtros
+          </CustomButton>
         </Styled.Buttons>
 
-        <Styled.Table>
-          <thead>
-            <tr>
-              <th>Nome do Cliente</th>
-              <th>Data de Nascimento</th>
-              <th>Telefone / Celular</th>
-              <th>E-mail</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredClients.map((client, index) => (
-              <tr key={index}>
-                <td>{client.name}</td>
-                <td>{client.birthdate || "Não informado"}</td>
-                <td>{client.phone || "Não informado"}</td>
-                <td>{client.email}</td>
+        {loading && <p>Carregando clientes...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {!loading && !error && (
+          <Styled.Table>
+            <thead>
+              <tr>
+                <th>Nome do Cliente</th>
+                <th>Data de Nascimento</th>
+                <th>Telefone / Celular</th>
+                <th>E-mail</th>
               </tr>
-            ))}
-          </tbody>
-        </Styled.Table>
+            </thead>
+            <tbody>
+              {filteredClients.length === 0 ? (
+                <tr>
+                  <td colSpan={4}>Nenhum cliente encontrado.</td>
+                </tr>
+              ) : (
+                filteredClients.map((client) => (
+                  <tr key={client.id}>
+                    <td>{client.name}</td>
+                    <td>{client.dob ? new Date(client.dob).toLocaleDateString() : "Não informado"}</td>
+                    <td>{client.phone || "Não informado"}</td>
+                    <td>{client.email || "Não informado"}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Styled.Table>
+        )}
       </Styled.Container>
     </MainLayout>
   );
 }
+
 const Styled = {
   Container: styled.div`
     padding: 2rem;

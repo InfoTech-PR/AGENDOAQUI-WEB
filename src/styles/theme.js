@@ -33,6 +33,13 @@ const theme = {
     // Button
     button: lighten(0.2, primaryColor),
     buttonHover: lighten(0.05, primaryColor),
+    success: "green",
+    warning: "#ffc107",
+    warningDark: "#e0a800",
+    info: "#17a2b8",
+    infoDark: "#117a8b",
+    error: "#dc3545",
+    errorDark: "#c82333",
   },
 };
 

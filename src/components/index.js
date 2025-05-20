@@ -1,5 +1,6 @@
 export { default as CustomModal } from './modals/CustomModal';
 export { default as PasswordInput } from './inputs/PasswordInput';
+export { default as CustomDateInput } from './inputs/CustomDateInput';
 export { default as CpfInput } from './inputs/CpfInput';
 export { default as PhoneInput } from './inputs/PhoneInput';
 export { default as CustomInput } from './inputs/CustomInput';
