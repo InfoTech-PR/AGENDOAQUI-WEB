@@ -8,6 +8,7 @@ import RegisterBusiness from "../pages/registers/RegisterBusiness";
 import RegisterBusinessSocials from "../pages/registers/RegisterBusinessSocials";
 import LoginBusiness from "../pages/login/LoginBusiness";
 import ClientList from "../pages/client/ClientList";
+import ClientDetails from "../pages/client/ClientDetails";
 import Agendamentos from "../pages/Agendamentos";
 import MinhaPagina from "../pages/MinhaPagina";
 import Ajuda from "../pages/Ajuda";
@@ -31,6 +32,7 @@ export default function AppRoutes() {
                 {/* Rota protegida */}
                 <Route path="/clientes" element={<PrivateRoute requiredRole="admin" ><ClientList /></PrivateRoute>} />
                 <Route path="/cadastrar-clientes" element={<PrivateRoute requiredRole="admin" ><ClientRegister /></PrivateRoute>} />
+                <Route path="/detalhes-clientes/:id" element={<PrivateRoute requiredRole="admin" ><ClientDetails /></PrivateRoute>} />
                 <Route path="/agendamentos" element={<PrivateRoute requiredRole="admin" ><Agendamentos /></PrivateRoute>} />
                 <Route path="/minha-pagina" element={<PrivateRoute requiredRole="admin" ><MinhaPagina /></PrivateRoute>} />
                 <Route path="/ajuda" element={<PrivateRoute requiredRole="admin" ><Ajuda /></PrivateRoute>} />

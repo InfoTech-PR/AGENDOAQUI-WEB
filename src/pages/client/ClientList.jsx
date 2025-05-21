@@ -93,7 +93,11 @@ export default function ClientList() {
                 </tr>
               ) : (
                 filteredClients.map((client) => (
-                  <tr key={client.id}>
+                  <tr
+                    key={client.id}
+                    onClick={() => navigate(`/detalhes-clientes/${client.id}`)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <td>{client.name}</td>
                     <td>{client.dob ? new Date(client.dob).toLocaleDateString() : "Não informado"}</td>
                     <td>{client.phone || "Não informado"}</td>
@@ -181,6 +185,10 @@ const Styled = {
 
     th {
       background-color: #f0f0f0;
+    }
+
+    tr:hover {
+      background-color:rgba(101, 154, 179, 0.79); 
     }
 
     @media (max-width: 768px) {
