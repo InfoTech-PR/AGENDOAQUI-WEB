@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MainLayout from "../../layouts/MainLayout";
 import { getClientById } from '../../services/clients';
-import { CustomButton } from '../../components';
+import { CustomButton, CustomInput, CustomDateInput, PhoneInput } from '../../components';
 
 export default function ClientDetails() {
   const { id } = useParams();
@@ -11,12 +11,14 @@ export default function ClientDetails() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function fetchClient() {
       setLoading(true);
       try {
         const data = await getClientById(id);
+        console.log(data)
         setClient(data);
       } catch (err) {
         setError("Erro ao carregar detalhes do cliente.");
@@ -41,23 +43,45 @@ export default function ClientDetails() {
 
         <Styled.InfoGroup>
           <Styled.Field>
-            <Styled.Label>Nome do Cliente</Styled.Label>
-            <Styled.Value>{client.name}</Styled.Value>
+            <CustomInput
+              label="Nome do Cliente"
+              name="name"
+              value={client.name}
+              disabled={!isEditing}
+              onChange={(e) => setClient({ ...client, name: e.target.value })}
+              required
+            />
           </Styled.Field>
 
           <Styled.Field>
-            <Styled.Label>Data de Nascimento</Styled.Label>
-            <Styled.Value>{client.dob ? new Date(client.dob).toLocaleDateString() : 'Não informado'}</Styled.Value>
+            <CustomDateInput
+              label="Data de Nascimento"
+              name="dob"
+              value={client.dob ? client.dob.split('T')[0] : ''}
+              disabled={!isEditing}
+              onChange={(e) => setClient({ ...client, dob: e.target.value })}
+            />
           </Styled.Field>
 
           <Styled.Field>
-            <Styled.Label>Telefone / Celular</Styled.Label>
-            <Styled.Value>{client.phone || 'Não informado'}</Styled.Value>
+            <PhoneInput
+              label="Telefone"
+              name="phone"
+              value={client.phone || 'Não informado'}
+              disabled={!isEditing}
+              onChange={(e) => setClient({ ...client, phone: e.target.value })}
+            />
           </Styled.Field>
 
           <Styled.Field>
-            <Styled.Label>Email</Styled.Label>
-            <Styled.Value>{client.email || 'Não informado'}</Styled.Value>
+            <CustomInput
+              label="Email"
+              name="email"
+              value={client.email || 'Não informado'}
+              disabled={!isEditing}
+              onChange={(e) => setClient({ ...client, email: e.target.value })}
+              required
+            />
           </Styled.Field>
 
           <Styled.StatusAndInfo>
@@ -81,16 +105,27 @@ export default function ClientDetails() {
               </Styled.Value>
             </Styled.InfoSide>
           </Styled.StatusAndInfo>
-          
         </Styled.InfoGroup>
+
+        {!isEditing ? (
           <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
-            <CustomButton variant="primary" onClick={() => navigate(`/editar-clientes/${client.id}`)}>
+            <CustomButton variant="primary" onClick={() => setIsEditing(true)}>
               Editar
             </CustomButton>
             <CustomButton variant="success" onClick={() => navigate(`/agendamento?clienteId=${client.id}`)}>
               Marcar Agendamento para esse Cliente
             </CustomButton>
           </div>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+            <CustomButton variant="error" onClick={() => setIsEditing(false)}>
+              Cancelar
+            </CustomButton>
+            <CustomButton variant="success" onClick={() => {/* lógica para confirmar edição */}}>
+              Confirmar
+            </CustomButton>
+          </div>
+        )}
       </Styled.Container>
     </MainLayout>
   );
@@ -103,6 +138,7 @@ const Styled = {
     max-width: 800px;
     margin: auto;
   `,
+
   Header: styled.div`
     display: flex;
     justify-content: space-between;
@@ -114,11 +150,21 @@ const Styled = {
       margin: 0;
     }
   `,
+
+  Value: styled.div`
+    background-color: #f5f5f5;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    line-height: 1.4;
+  `,
+
   Title: styled.h2`
     text-align: left;
     margin-bottom: 1rem;
     color: ${({ theme }) => theme.colors.text};
   `,
+
   Actions: styled.div`
     display: flex;
     gap: 1rem;
@@ -132,11 +178,13 @@ const Styled = {
       }
     }
   `,
+
   InfoGroup: styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
   `,
+
   Field: styled.div`
     flex: 1 1 calc(50% - 0.75rem); 
 
@@ -144,16 +192,10 @@ const Styled = {
       flex: 1 1 100%; 
     }
   `,
+  
   Label: styled.span`
     font-weight: bold;
     color: #555;
-  `,
-  Value: styled.div`
-    background-color: #f5f5f5;
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    line-height: 1.4;
   `,
 
   StatusAndInfo: styled.div`
