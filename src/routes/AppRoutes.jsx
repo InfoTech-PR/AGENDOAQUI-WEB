@@ -9,7 +9,7 @@ import RegisterBusinessSocials from "../pages/registers/RegisterBusinessSocials"
 import LoginBusiness from "../pages/login/LoginBusiness";
 import ClientList from "../pages/client/ClientList";
 import ClientDetails from "../pages/client/ClientDetails";
-import Agendamentos from "../pages/Agendamentos";
+import SchedulingList from "../pages/scheduling/SchedulingList";
 import MinhaPagina from "../pages/MinhaPagina";
 import Ajuda from "../pages/Ajuda";
 import ClientRegister from "../pages/client/ClientRegister";
@@ -33,7 +33,7 @@ export default function AppRoutes() {
                 <Route path="/clientes" element={<PrivateRoute requiredRole="admin" ><ClientList /></PrivateRoute>} />
                 <Route path="/cadastrar-clientes" element={<PrivateRoute requiredRole="admin" ><ClientRegister /></PrivateRoute>} />
                 <Route path="/detalhes-clientes/:id" element={<PrivateRoute requiredRole="admin" ><ClientDetails /></PrivateRoute>} />
-                <Route path="/agendamentos" element={<PrivateRoute requiredRole="admin" ><Agendamentos /></PrivateRoute>} />
+                <Route path="/agendamentos" element={<PrivateRoute requiredRole="admin" ><SchedulingList /></PrivateRoute>} />
                 <Route path="/minha-pagina" element={<PrivateRoute requiredRole="admin" ><MinhaPagina /></PrivateRoute>} />
                 <Route path="/ajuda" element={<PrivateRoute requiredRole="admin" ><Ajuda /></PrivateRoute>} />
                 

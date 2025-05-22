@@ -7,3 +7,4 @@ export { default as CustomInput } from './inputs/CustomInput';
 export { default as CustomButton } from './CustomButton';
 export { default as CustomLink } from './CustomLink';
 export { default as CustomSelect } from './CustomSelect';
+export { default as SchedulingTable } from './SchedulingTable';

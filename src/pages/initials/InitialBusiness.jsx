@@ -133,7 +133,7 @@ export default function InitialBusiness() {
 			<Styled.Body>
 				
         <Styled.BusinesSection>
-          <Styled.Image src={service.imageUrl} alt={service.name} />
+          <Styled.Image src={'service.imageUrl'} alt={service.name} />
           <Styled.Info>
             <h1>{service.name}</h1>
             <p><strong>Categoria:</strong> {service.category}</p>
