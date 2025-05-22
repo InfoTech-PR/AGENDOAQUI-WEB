@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import styled from "styled-components";
-import { CustomDateInput, CustomButton, SchedulingTable  } from "../../components"; 
+import { CustomDateInput, CustomButton, SchedulingTable } from "../../components"; 
+import { getAllSchedulingsByBusinessId } from '../../services/schedulings';
 
 export default function SchedulingList() {
+  const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
+  const businessId = storedUser.user.id;
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -15,6 +18,7 @@ export default function SchedulingList() {
     { id: 2, date: "2025-05-23", hour: "12:00", service: "Consulta", client: "Mario Henrique" },
     { id: 3, date: "2025-05-24", hour: "10:00", service: "Terapia", client: "Ana Maria" },
   ];
+
 
   useEffect(() => {
     const today = new Date();
@@ -30,11 +34,20 @@ export default function SchedulingList() {
     fetchAppointments(firstDayOfWeek, lastDayOfWeek);
   }, []);
 
-  function fetchAppointments(start, end) {
-    // Aqui deve chamar API com filtros start e end, adaptado conforme seu backend
-    // Exemplo fictício:
-    // getAppointments({ startDate: start, endDate: end }).then(setAppointments);
-    setAppointments(mockAgendamentos);
+  async function fetchAppointments(start, end) {
+    try {
+      const appointments = await getAllSchedulingsByBusinessId(businessId);
+
+      const filtered = appointments.filter(appointment => {
+        const appointmentDate = new Date(appointment.date);
+        return appointmentDate >= start && appointmentDate <= end;
+      });
+
+      setAppointments(mockAgendamentos);
+    } catch (error) {
+      console.error('Erro ao buscar agendamentos:', error);
+      setAppointments([]);
+    }
   }
 
   function handleSearch() {

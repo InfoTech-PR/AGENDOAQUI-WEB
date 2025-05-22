@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { FaSpinner } from "react-icons/fa";
 
-export default function CustomButton({ children, loading, variant = "primary", ...props }) {
+export default function CustomButton({ children, loading, variant = "button", ...props }) {
   return (
     <Button variant={variant} {...props} disabled={loading || props.disabled}>
       {loading ? (

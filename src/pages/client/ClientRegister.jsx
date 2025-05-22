@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function ClientRegister() {
   const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
   const id = storedUser.user.id;
-  const [formData, setFormData] = useState({ name: "", dob: "", email: "", phone: "", business: "" });
+  const [formData, setFormData] = useState({ name: "", dob: "", email: "", phone: "", businessId: "" });
   const [loading, setLoading] = useState(false);
   const isFormIncomplete = !formData.name.trim() || (!formData.email.trim() && !formData.phone.trim());
   const [modal, setModal] = useState({ show: false, type: "info", message: "" });
@@ -30,7 +30,7 @@ export default function ClientRegister() {
     const sanitizedData = {
         ...formData,
       phone: sanitizePhone(formData.phone),
-      business: id,
+      businessId: id,
     };
 
     try {

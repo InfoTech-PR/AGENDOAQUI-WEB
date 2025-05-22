@@ -38,8 +38,8 @@ export default function SchedulingTable({ appointments }) {
               <td>{hour}</td>
               <td>
                 {appt ? (
-                  <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.service} com ${appt.client} às ${appt.hour}` })}>
-                    <strong>{appt.service}</strong>
+                  <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.serviceId} com ${appt.client} às ${appt.hour}` })}>
+                    <strong>{appt.serviceId}</strong>
                     <div>{appt.client}</div>
                   </AgendamentoCell>
                 ) : ""}
@@ -76,8 +76,8 @@ export default function SchedulingTable({ appointments }) {
                 return (
                   <td key={day.toISOString()}>
                     {appt ? (
-                      <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.service} com ${appt.client} às ${appt.hour}` })}>
-                        <strong>{appt.service}</strong>
+                      <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.serviceId} com ${appt.client} às ${appt.hour}` })}>
+                        <strong>{appt.serviceId}</strong>
                         <div>{appt.client}</div>
                       </AgendamentoCell>
                     ) : ""}
