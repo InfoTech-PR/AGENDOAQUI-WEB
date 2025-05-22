@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FloatingLabel, Form } from "react-bootstrap";
 
-export default function PhoneInput({ label = "Telefone", name, value, onChange, required = false }) {
+export default function PhoneInput({ label = "Telefone", name, value, onChange, required = false, disabled = false, }) {
   const handlePhoneChange = (e) => {
     let val = e.target.value.replace(/\D/g, "");
 
@@ -23,6 +23,7 @@ export default function PhoneInput({ label = "Telefone", name, value, onChange, 
           placeholder={label}
           value={value}
           name={name}
+          disabled={disabled}
           onChange={handlePhoneChange}
           required={required}
         />

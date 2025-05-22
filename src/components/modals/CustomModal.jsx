@@ -17,11 +17,14 @@ const titles = {
   warning: "Atenção",
 };
 
-const CustomModal = ({ show, onHide, type = "info", message, onConfirm }) => {
+const CustomModal = ({ show, onHide, type = "info", message, onConfirm, onCancel, confirmText, cancelText }) => {
   const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
-    }
+    if (onConfirm) onConfirm();
+    onHide();
+  };
+
+  const handleCancel = () => {
+    if (onCancel) onCancel();
     onHide();
   };
 
@@ -36,7 +39,11 @@ const CustomModal = ({ show, onHide, type = "info", message, onConfirm }) => {
         <MessageText>{message}</MessageText>
       </Modal.Body>
       <Modal.Footer>
-        <StyledButton onClick={handleConfirm}>Ok</StyledButton>
+        {onCancel && <StyledButton variant="secondary" onClick={handleCancel}>{cancelText || 'Cancelar'}</StyledButton>}
+        {onConfirm && <StyledButton onClick={handleConfirm}>{confirmText || 'Ok'}</StyledButton>}
+        {!onConfirm && !onCancel && (
+          <StyledButton onClick={handleConfirm}>Ok</StyledButton>
+        )}
       </Modal.Footer>
     </StyledModal>
   );
