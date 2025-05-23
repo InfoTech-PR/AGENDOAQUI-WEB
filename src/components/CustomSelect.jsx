@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
-export default function CustomSelect({ options, loading, value, onChange, variant = "primary", ...props }) {
+export default function CustomSelect({ options, loading, value, onChange, placeholder = "Selecione", variant = "primary", ...props }) {
   return (
     <SelectWrapper variant={variant} {...props}>
       {loading ? (
@@ -8,7 +8,7 @@ export default function CustomSelect({ options, loading, value, onChange, varian
       ) : (
         <select value={value} onChange={onChange} disabled={loading}>
           <option value="" disabled>
-            Categoria
+            {placeholder}
           </option>
           {options.map((option, index) => (
             <option key={index} value={option.value}>

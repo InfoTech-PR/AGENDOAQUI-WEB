@@ -22,12 +22,12 @@ export default function Sidebar({ isOpen, onClose }) {
       item.subItems?.some(sub => sub.path === currentPath)
     );
     if (activeMenu) {
-      setExpandedMenu(activeMenu.path);
+      setExpandedMenu(activeMenu.label);
     }
   }, [currentPath]);
 
-  const toggleMenu = (menuPath) => {
-    setExpandedMenu(prev => (prev === menuPath ? null : menuPath));
+  const toggleMenu = (menuLabel) => {
+    setExpandedMenu(prev => (prev === menuLabel ? null : menuLabel));
   };
 
   return (
@@ -44,16 +44,16 @@ export default function Sidebar({ isOpen, onClose }) {
             menuItems.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.path}>
+                <div key={item.label}>
                 <NavItem selected={currentPath.startsWith(item.path)}>
                   {item.subItems ? (
-                    <div onClick={() => toggleMenu(item.path)} style={{ cursor: "pointer" }}>
+                    <div onClick={() => toggleMenu(item.label)} style={{ cursor: "pointer" }}>
                       <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <span style={{ display: "flex", alignItems: "center" }}>
                           {Icon && <Icon style={{ marginRight: 8 }} />}
                           {item.label}
                         </span>
-                        {expandedMenu === item.path ? <FaChevronDown size={12} /> : <FaChevronRight size={12} />}
+                        {expandedMenu === item.label ? <FaChevronDown size={12} /> : <FaChevronRight size={12} />}
                       </span>
                     </div>
                   ) : (
@@ -66,7 +66,7 @@ export default function Sidebar({ isOpen, onClose }) {
                   )}
                 </NavItem>
 
-                  {item.subItems && expandedMenu === item.path && (
+                  {item.subItems && expandedMenu === item.label && (
                     item.subItems.map((sub) => {
                       const SubIcon = sub.icon;
                       return (

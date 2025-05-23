@@ -17,3 +17,8 @@ export const getClientById = async (id) => {
     const response = await api.get(`/clients/getClientById/${id}`);
     return response.data;
 };
+
+export const getAllClientsByBusiness = async (id) => {
+    const response = await api.get(`/clients/getAllClientsByBusiness/${id}`);
+    return response.data;
+}

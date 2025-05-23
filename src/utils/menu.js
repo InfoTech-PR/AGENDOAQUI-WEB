@@ -20,10 +20,21 @@ const menu = [
   },  
   {
     label: "Agendamentos",
-    path: "/agendamentos",
     icon: FaCalendarAlt,
     role: "admin",
-  },
+    subItems: [
+      {
+        label: "Listar Agendamentos",
+        path: "/agendamentos",
+        role: "admin",
+      },
+      {
+        label: "Cadastrar Agendamentos",
+        path: "/cadastrar-agendamentos",
+        role: "admin",
+      },
+    ]
+  }, 
   {
     label: "Minha Página",
     path: "/minha-pagina",

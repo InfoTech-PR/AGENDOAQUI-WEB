@@ -102,7 +102,6 @@ export default function SchedulingList() {
 
 const Styled = {
   Container: styled.div`
-    padding: 2rem;
     max-width: 900px;
     margin: auto;
   `,
