@@ -22,6 +22,7 @@ export default function SchedulingRegister() {
     async function fetchData() {
       try {
         const servicesResponse = await getAllServicesByBusiness(businessId);
+        console.log(servicesResponse)
         const clientsResponse = await getAllClientsByBusiness(businessId);
         setServices(servicesResponse);
         setClients(clientsResponse);

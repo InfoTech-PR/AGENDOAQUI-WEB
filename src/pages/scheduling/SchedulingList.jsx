@@ -13,13 +13,6 @@ export default function SchedulingList() {
   const [endDate, setEndDate] = useState('');
   const [appointments, setAppointments] = useState([]);
 
-  const mockAgendamentos = [
-    { id: 1, date: "2025-05-17", hour: "08:00", service: "Consulta", client: "João da Silva" },
-    { id: 2, date: "2025-05-23", hour: "12:00", service: "Consulta", client: "Mario Henrique" },
-    { id: 3, date: "2025-05-24", hour: "10:00", service: "Terapia", client: "Ana Maria" },
-  ];
-
-
   useEffect(() => {
     const today = new Date();
     const firstDayOfWeek = new Date(today);
@@ -37,13 +30,12 @@ export default function SchedulingList() {
   async function fetchAppointments(start, end) {
     try {
       const appointments = await getAllSchedulingsByBusinessId(businessId);
-
       const filtered = appointments.filter(appointment => {
         const appointmentDate = new Date(appointment.date);
         return appointmentDate >= start && appointmentDate <= end;
       });
 
-      setAppointments(mockAgendamentos);
+      setAppointments(filtered);
     } catch (error) {
       console.error('Erro ao buscar agendamentos:', error);
       setAppointments([]);

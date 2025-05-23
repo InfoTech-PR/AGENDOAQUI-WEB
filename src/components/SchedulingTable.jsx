@@ -4,6 +4,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { format, addDays, subDays, startOfWeek } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import CustomModal from "./CustomModal";
+import { parseISO } from "date-fns";
 
 const hours = Array.from({ length: 10 }, (_, i) => `${String(i + 8).padStart(2, "0")}:00`);
 
@@ -31,16 +32,16 @@ export default function SchedulingTable({ appointments }) {
       <tbody>
         {hours.map(hour => {
           const appt = appointments.find(a =>
-            format(new Date(a.date), "yyyy-MM-dd") === format(currentDate, "yyyy-MM-dd") && a.hour === hour
+            format(parseISO(a.date), "yyyy-MM-dd") === format(currentDate, "yyyy-MM-dd") && a.hour.slice(0,5) === hour
           );
           return (
             <tr key={hour}>
               <td>{hour}</td>
               <td>
                 {appt ? (
-                  <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.serviceId} com ${appt.client} às ${appt.hour}` })}>
-                    <strong>{appt.serviceId}</strong>
-                    <div>{appt.client}</div>
+                  <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.Service.name} com ${appt.Client.name} às ${appt.hour}` })}>
+                    <strong>{appt.Service.name}</strong>
+                    <div>{appt.Client.name}</div>
                   </AgendamentoCell>
                 ) : ""}
               </td>
@@ -71,14 +72,14 @@ export default function SchedulingTable({ appointments }) {
               <td>{hour}</td>
               {days.map(day => {
                 const appt = appointments.find(a =>
-                  format(new Date(a.date), "yyyy-MM-dd") === format(day, "yyyy-MM-dd") && a.hour === hour
+                  format(parseISO(a.date), "yyyy-MM-dd") === format(day, "yyyy-MM-dd") && a.hour.slice(0,5) === hour
                 );
                 return (
                   <td key={day.toISOString()}>
                     {appt ? (
-                      <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.serviceId} com ${appt.client} às ${appt.hour}` })}>
-                        <strong>{appt.serviceId}</strong>
-                        <div>{appt.client}</div>
+                      <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.Service.name} com ${appt.Client.name} às ${appt.hour}` })}>
+                        <strong>{appt.Service.name}</strong>
+                        <div>{appt.Client.name}</div>
                       </AgendamentoCell>
                     ) : ""}
                   </td>
