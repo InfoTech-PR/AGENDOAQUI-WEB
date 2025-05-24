@@ -5,6 +5,11 @@ export const getAllSchedulingsByBusinessId = async (id) => {
     return response.data;
 };
 
+export const getSchedulingById = async (id) => {
+    const response = await api.get(`/schedulings/getSchedulingById/${id}`);
+    return response.data;
+};
+
 export const registerScheduling = (data) => {
     return api.post("/schedulings/registerScheduling", data);
 };

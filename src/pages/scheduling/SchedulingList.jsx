@@ -81,7 +81,7 @@ export default function SchedulingList() {
           <CustomDateInput label="Data Final" value={endDate} onChange={e => setEndDate(e.target.value)} />
           <CustomButton variant="primary" onClick={handleSearch}>Pesquisar</CustomButton>
           <CustomButton variant="primary" onClick={handleClear}>Limpar Campos</CustomButton>
-          <CustomButton variant="success" onClick={() => navigate('/novo-agendamento')}>Realizar Novo Agendamento</CustomButton>
+          <CustomButton variant="success" onClick={() => navigate('/cadastrar-agendamentos')}>Realizar Novo Agendamento</CustomButton>
         </Styled.Filters>
 
         <Styled.Table>

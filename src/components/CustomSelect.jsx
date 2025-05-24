@@ -1,13 +1,13 @@
 import styled, { keyframes } from "styled-components";
 
-export default function CustomSelect({ options, loading, value, onChange, placeholder = "Selecione", variant = "primary", ...props }) {
+export default function CustomSelect({ disabled = false, options, loading, value, onChange, placeholder = "Selecione", variant = "primary", ...props }) {
   return (
     <SelectWrapper variant={variant} {...props}>
       {loading ? (
         <SpinnerIcon />
       ) : (
-        <select value={value} onChange={onChange} disabled={loading}>
-          <option value="" disabled>
+        <select value={value} onChange={onChange} disabled={disabled}>
+          <option value="" disabled={disabled}>
             {placeholder}
           </option>
           {options.map((option, index) => (
@@ -32,9 +32,11 @@ const SelectWrapper = styled.div`
   align-items: center;
   gap: 8px;
   width: 100%;  
-  max-width: 400px;  
+  max-width: none;  
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
+  border-radius: 4px;
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1);
 
   select {
     background-color: ${({ theme }) => theme.colors.inputBg};

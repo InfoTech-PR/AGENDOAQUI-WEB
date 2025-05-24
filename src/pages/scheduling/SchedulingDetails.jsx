@@ -4,18 +4,20 @@ import { CustomDateInput, CustomHourInput, CustomModal, CustomSelect, CustomInpu
 import { useState, useEffect } from "react";
 import { getAllClientsByBusiness } from "../../services/clients";
 import { getAllServicesByBusiness } from "../../services/services";
-import { registerScheduling } from "../../services/schedulings";
-import { useNavigate } from "react-router-dom";
+import { registerScheduling, getSchedulingById } from "../../services/schedulings";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function SchedulingRegister() {
+export default function SchedulingDetails() {
+  const { id } = useParams();
   const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
   const businessId = storedUser.user.id;
-  const [formData, setFormData] = useState({ date: "", hour: "", serviceId: "", clientId: "", businessId: "", obs: "" });
-  const isFormIncomplete = !formData.date.trim() || !formData.hour.trim() || !formData.serviceId.trim() || !formData.clientId.trim();
+  const [formData, setFormData] = useState({ date: "", hour: "", serviceId: "", clientId: "", businessId: "", observations: "" });
+  // const isFormIncomplete = !formData.date.trim() || !formData.hour.trim() || !formData.serviceId.trim() || !formData.clientId.trim();
   const [modal, setModal] = useState({ show: false, type: "info", message: "" });
   const [services, setServices] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -23,6 +25,8 @@ export default function SchedulingRegister() {
       try {
         const servicesResponse = await getAllServicesByBusiness(businessId);
         const clientsResponse = await getAllClientsByBusiness(businessId);
+        const schedulingResponse = await getSchedulingById(id);
+        setFormData(schedulingResponse);
         setServices(servicesResponse);
         setClients(clientsResponse);
       } catch (error) {
@@ -104,6 +108,7 @@ export default function SchedulingRegister() {
               label="Data Inicial"
               name="date"
               value={formData.date}
+              disabled={!isEditing}
               onChange={handleChange}
             />
 
@@ -111,6 +116,7 @@ export default function SchedulingRegister() {
               label="Hora"
               name="hour"
               value={formData.hour}
+              disabled={!isEditing}
               onChange={handleChange}
             />
           </Styled.Line>
@@ -122,6 +128,7 @@ export default function SchedulingRegister() {
               name="serviceId"
               placeholder="Selecione o Serviço"
               value={formData.serviceId}
+              disabled={!isEditing}
               onChange={(e) => {
                 setFormData({ ...formData, serviceId: e.target.value });
               }}
@@ -133,27 +140,28 @@ export default function SchedulingRegister() {
               name="clientId"
               placeholder="Selecione o cliente"
               value={formData.clientId}
+              disabled={!isEditing}
               onChange={(e) => setFormData({ ...formData, clientId: e.target.value })}
             />
           </Styled.Line>
 
           <CustomInput
             label="Observações"
-            name="obs"
-            value={formData.obs}
+            name="observations"
+            value={formData.observations}
+            disabled={!isEditing}
             onChange={handleChange}
           />
-
-          <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
-            <CustomButton variant="error" onClick={() => {navigate("/agendamentos");}}>
-              Cancelar
-            </CustomButton>
-
-            <CustomButton type="submit" loading={loading} disabled={isFormIncomplete}>
-              Confirmar
-            </CustomButton>
-          </div>
         </form>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+          <CustomButton variant="error" onClick={() => {}}>
+            Cancelar Agendamento
+          </CustomButton>
+
+          <CustomButton onClick={() => { setIsEditing(true) }}>
+            Editar Agendamento
+          </CustomButton>
+        </div>
       </Styled.Container>
       <CustomModal
         show={modal.show}

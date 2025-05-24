@@ -11,6 +11,7 @@ import ClientList from "../pages/client/ClientList";
 import ClientDetails from "../pages/client/ClientDetails";
 import SchedulingList from "../pages/scheduling/SchedulingList";
 import SchedulingRegister from "../pages/scheduling/SchedulingRegister";
+import SchedulingDetails from "../pages/scheduling/SchedulingDetails";
 import MinhaPagina from "../pages/MinhaPagina";
 import Ajuda from "../pages/Ajuda";
 import ClientRegister from "../pages/client/ClientRegister";
@@ -37,6 +38,7 @@ export default function AppRoutes() {
 
                 <Route path="/agendamentos" element={<PrivateRoute requiredRole="admin" ><SchedulingList /></PrivateRoute>} />
                 <Route path="/cadastrar-agendamentos" element={<PrivateRoute requiredRole="admin" ><SchedulingRegister /></PrivateRoute>} />
+                <Route path="/detalhes-agendamentos/:id" element={<PrivateRoute requiredRole="admin" ><SchedulingDetails /></PrivateRoute>} />
                 
                 <Route path="/minha-pagina" element={<PrivateRoute requiredRole="admin" ><MinhaPagina /></PrivateRoute>} />
                 <Route path="/ajuda" element={<PrivateRoute requiredRole="admin" ><Ajuda /></PrivateRoute>} />

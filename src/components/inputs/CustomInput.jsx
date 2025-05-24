@@ -26,6 +26,13 @@ const InputWrapper = styled.div`
     padding: 0.8rem 0.75rem;
     border-radius: 4px;
     transition: background-color 0.2s ease;
+    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1);
+    
+    &:disabled {
+      background-color: ${({ theme }) => theme.colors.disabledBg};
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
   }
 
   .form-control:focus {

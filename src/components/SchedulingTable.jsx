@@ -1,17 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { format, addDays, subDays, startOfWeek } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import CustomModal from "./CustomModal";
 import { parseISO } from "date-fns";
 
 const hours = Array.from({ length: 10 }, (_, i) => `${String(i + 8).padStart(2, "0")}:00`);
 
 export default function SchedulingTable({ appointments }) {
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState("dia"); // "dia" ou "semana"
-  const [modal, setModal] = useState({ show: false, type: "info", message: "" });
+  const [viewMode, setViewMode] = useState("dia");
 
   const goToPrevious = () => {
     setCurrentDate(viewMode === "dia" ? subDays(currentDate, 1) : subDays(currentDate, 7));
@@ -19,6 +19,10 @@ export default function SchedulingTable({ appointments }) {
 
   const goToNext = () => {
     setCurrentDate(viewMode === "dia" ? addDays(currentDate, 1) : addDays(currentDate, 7));
+  };
+
+  const handleRedirect = (id) => {
+    navigate(`/detalhes-agendamentos/${id}`);
   };
 
   const renderDayView = () => (
@@ -39,7 +43,7 @@ export default function SchedulingTable({ appointments }) {
               <td>{hour}</td>
               <td>
                 {appt ? (
-                  <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.Service.name} com ${appt.Client.name} às ${appt.hour}` })}>
+                  <AgendamentoCell onClick={() => handleRedirect(appt.id)}>
                     <strong>{appt.Service.name}</strong>
                     <div>{appt.Client.name}</div>
                   </AgendamentoCell>
@@ -77,7 +81,7 @@ export default function SchedulingTable({ appointments }) {
                 return (
                   <td key={day.toISOString()}>
                     {appt ? (
-                      <AgendamentoCell onClick={() => setModal({ show: true, type: "info", message: `${appt.Service.name} com ${appt.Client.name} às ${appt.hour}` })}>
+                      <AgendamentoCell onClick={() => handleRedirect(appt.id)}>
                         <strong>{appt.Service.name}</strong>
                         <div>{appt.Client.name}</div>
                       </AgendamentoCell>
@@ -110,13 +114,6 @@ export default function SchedulingTable({ appointments }) {
       </Nav>
 
       {viewMode === "dia" ? renderDayView() : renderWeekView()}
-
-      <CustomModal
-        show={modal.show}
-        type={modal.type}
-        message={modal.message}
-        onHide={() => setModal({ ...modal, show: false })}
-      />
     </>
   );
 }
