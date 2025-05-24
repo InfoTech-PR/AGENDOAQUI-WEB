@@ -13,3 +13,7 @@ export const getSchedulingById = async (id) => {
 export const registerScheduling = (data) => {
     return api.post("/schedulings/registerScheduling", data);
 };
+
+export const updateScheduling = (data) => {
+    return api.patch("/schedulings/updateScheduling", data)
+}
