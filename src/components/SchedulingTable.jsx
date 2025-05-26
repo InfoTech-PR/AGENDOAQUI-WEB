@@ -25,6 +25,14 @@ export default function SchedulingTable({ appointments }) {
     navigate(`/detalhes-agendamentos/${id}`);
   };
 
+  const renderAppointmentCell = (appt) => (
+    <AgendamentoCell onClick={() => handleRedirect(appt.id)} canceled={appt.canceled}>
+      {appt.canceled && <CancelBanner>CANCELADO POR {appt.nameWhoCanceled}</CancelBanner>}
+      <strong>{appt.Service.name}</strong>
+      <div>{appt.Client.name}</div>
+    </AgendamentoCell>
+  );
+
   const renderDayView = () => (
     <Table>
       <thead>
@@ -34,21 +42,16 @@ export default function SchedulingTable({ appointments }) {
         </tr>
       </thead>
       <tbody>
-        {hours.map(hour => {
-          const appt = appointments.find(a =>
-            format(parseISO(a.date), "yyyy-MM-dd") === format(currentDate, "yyyy-MM-dd") && a.hour.slice(0,5) === hour
+        {hours.map((hour) => {
+          const appt = appointments.find(
+            (a) =>
+              format(parseISO(a.date), "yyyy-MM-dd") === format(currentDate, "yyyy-MM-dd") &&
+              a.hour.slice(0, 5) === hour
           );
           return (
             <tr key={hour}>
               <td>{hour}</td>
-              <td>
-                {appt ? (
-                  <AgendamentoCell onClick={() => handleRedirect(appt.id)}>
-                    <strong>{appt.Service.name}</strong>
-                    <div>{appt.Client.name}</div>
-                  </AgendamentoCell>
-                ) : ""}
-              </td>
+              <td>{appt ? renderAppointmentCell(appt) : ""}</td>
             </tr>
           );
         })}
@@ -65,29 +68,22 @@ export default function SchedulingTable({ appointments }) {
         <thead>
           <tr>
             <th>Horário</th>
-            {days.map(day => (
+            {days.map((day) => (
               <th key={day.toISOString()}>{format(day, "EE dd/MM", { locale: ptBR })}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {hours.map(hour => (
+          {hours.map((hour) => (
             <tr key={hour}>
               <td>{hour}</td>
-              {days.map(day => {
-                const appt = appointments.find(a =>
-                  format(parseISO(a.date), "yyyy-MM-dd") === format(day, "yyyy-MM-dd") && a.hour.slice(0,5) === hour
+              {days.map((day) => {
+                const appt = appointments.find(
+                  (a) =>
+                    format(parseISO(a.date), "yyyy-MM-dd") === format(day, "yyyy-MM-dd") &&
+                    a.hour.slice(0, 5) === hour
                 );
-                return (
-                  <td key={day.toISOString()}>
-                    {appt ? (
-                      <AgendamentoCell onClick={() => handleRedirect(appt.id)}>
-                        <strong>{appt.Service.name}</strong>
-                        <div>{appt.Client.name}</div>
-                      </AgendamentoCell>
-                    ) : ""}
-                  </td>
-                );
+                return <td key={day.toISOString()}>{appt ? renderAppointmentCell(appt) : ""}</td>;
               })}
             </tr>
           ))}
@@ -99,18 +95,28 @@ export default function SchedulingTable({ appointments }) {
   return (
     <>
       <Tabs>
-        <a onClick={() => setViewMode("semana")} className={viewMode === "semana" ? "active" : ""}>Semana</a>
-        <a onClick={() => setViewMode("dia")} className={viewMode === "dia" ? "active" : ""}>Dia</a>
+        <a onClick={() => setViewMode("semana")} className={viewMode === "semana" ? "active" : ""}>
+          Semana
+        </a>
+        <a onClick={() => setViewMode("dia")} className={viewMode === "dia" ? "active" : ""}>
+          Dia
+        </a>
       </Tabs>
 
       <Nav>
-        <span onClick={goToPrevious}><FaChevronLeft /></span>
+        <span onClick={goToPrevious}>
+          <FaChevronLeft />
+        </span>
         <div>
           {viewMode === "dia"
             ? `Dia ${format(currentDate, "dd")} (${format(currentDate, "MMMM yyyy", { locale: ptBR })})`
-            : `Semana de ${format(startOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM yyyy", { locale: ptBR })}`}
+            : `Semana de ${format(startOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM yyyy", {
+                locale: ptBR,
+              })}`}
         </div>
-        <span onClick={goToNext}><FaChevronRight /></span>
+        <span onClick={goToNext}>
+          <FaChevronRight />
+        </span>
       </Nav>
 
       {viewMode === "dia" ? renderDayView() : renderWeekView()}
@@ -155,7 +161,8 @@ const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
 
-  th, td {
+  th,
+  td {
     border: 1px solid #ccc;
     padding: 0.75rem;
     text-align: left;
@@ -167,7 +174,21 @@ const Table = styled.table`
   }
 `;
 
+const CancelBanner = styled.div`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #e74c3c;
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  z-index: 10;
+`;
+
 const AgendamentoCell = styled.div`
+  position: relative;
   background-color: #ddd;
   padding: 0.5rem;
   border-radius: 4px;

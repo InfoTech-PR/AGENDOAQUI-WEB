@@ -4,14 +4,18 @@ import { CustomDateInput, CustomHourInput, CustomModal, CustomSelect, CustomInpu
 import { useState, useEffect } from "react";
 import { getAllClientsByBusiness } from "../../services/clients";
 import { getAllServicesByBusiness } from "../../services/services";
-import { updateScheduling, getSchedulingById } from "../../services/schedulings";
+import { updateScheduling, getSchedulingById, createSchedulingCancel } from "../../services/schedulings";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function SchedulingDetails() {
   const { id } = useParams();
+  const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
+  const userId = storedUser.user.id;
   const [formData, setFormData] = useState({ date: "", hour: "", serviceId: "", clientId: "", businessId: "", observations: "" });
   const requiredFields = ["date", "hour", "serviceId", "clientId"];
   const [modal, setModal] = useState({ show: false, type: "info", message: "", onConfirm: null, onCancel: null });
+  const [cancelReasonModal, setCancelReasonModal] = useState({ show: false, reason: "" });
+  const [successModal, setSuccessModal] = useState({ show: false, message: "" });
   const [services, setServices] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -122,6 +126,53 @@ export default function SchedulingDetails() {
     setIsEditing(false);
     setFormData(originalScheduling);
   }
+
+  function registerCancelation() {
+    setModal({ show: false, type: "info", message: "" }); 
+    setCancelReasonModal({ show: true, reason: "" });
+  }
+
+  function cancelScheduling() {
+    setModal({
+      show: true,
+      type: "warning",
+      message: "Tem certeza que deseja cancelar este Agendamento?",
+      onConfirm: registerCancelation,
+      onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
+    });
+  }
+
+  function closeSuccessModal() {
+    setSuccessModal({ show: false, message: "" });
+    navigate("/agendamentos");
+  }
+
+  async function confirmCancelScheduling() {
+    setLoading(true);
+    try {
+      await createSchedulingCancel({
+        schedulingId: id,
+        cancelledById: userId,
+        cancelledByType: "business",
+        cancelDescription: cancelReasonModal.reason,
+      });
+  
+      setCancelReasonModal({ show: false, reason: "" });
+  
+      setSuccessModal({
+        show: true,
+        message: "O Agendamento foi cancelado com sucesso",
+      });
+    } catch (error) {
+      setModal({
+        show: true,
+        type: "error",
+        message: error.response?.data?.message || "Erro ao cancelar agendamento.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }  
   
   function handleChange(e) {
     const { name, value } = e.target;
@@ -203,7 +254,7 @@ export default function SchedulingDetails() {
         
         {!isEditing ? (
           <Styled.Actions>
-            <CustomButton variant="error" onClick={() => {}}>
+            <CustomButton variant="error" onClick={cancelScheduling}>
               Cancelar Agendamento
             </CustomButton>
 
@@ -228,10 +279,42 @@ export default function SchedulingDetails() {
           message={modal.message}
           onConfirm={modal.onConfirm}
           onCancel={modal.onCancel}
-          onHide={() => setModal({ ...modal, show: false })}
-          confirmText={modal.onConfirm ? "Manter anterior" : undefined}
-          cancelText={modal.onCancel ? "Continuar editando" : "Fechar"}
+          onHide={() => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null })}
+          confirmText={modal.onConfirm ? "Sim" : undefined}
+          cancelText={modal.onCancel ? "Não" : "Fechar"}
+      />
+      {/* Modal para motivo do cancelamento */}
+      {cancelReasonModal.show && (
+        <CustomModal
+          show={true}
+          type="warning"
+          message={
+            <>
+              <p>Informe o motivo do cancelamento (opcional):</p>
+              <textarea
+                style={{ width: "100%", height: "100px", resize: "none" }}
+                value={cancelReasonModal.reason}
+                onChange={(e) => setCancelReasonModal({ ...cancelReasonModal, reason: e.target.value })}
+              />
+            </>
+          }
+          onConfirm={confirmCancelScheduling}
+          onCancel={() => setCancelReasonModal({ show: false, reason: "" })}
+          confirmText="Confirmar"
+          cancelText="Cancelar"
         />
+      )}
+
+      {/* Modal de sucesso */}
+      {successModal.show && (
+        <CustomModal
+          show={true}
+          type="success"
+          message={successModal.message}
+          onConfirm={closeSuccessModal}
+          confirmText="Ok"
+        />
+      )}
     </MainLayout>
   );
 }

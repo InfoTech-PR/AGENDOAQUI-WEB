@@ -39,8 +39,8 @@ const CustomModal = ({ show, onHide, type = "info", message, onConfirm, onCancel
         <MessageText>{message}</MessageText>
       </Modal.Body>
       <Modal.Footer>
-        {onCancel && <StyledButton variant="secondary" onClick={handleCancel}>{cancelText || 'Cancelar'}</StyledButton>}
-        {onConfirm && <StyledButton onClick={handleConfirm}>{confirmText || 'Ok'}</StyledButton>}
+        {onCancel && <StyledButton variant="danger" onClick={handleCancel}>{cancelText || 'Cancelar'}</StyledButton>}
+        {onConfirm && <StyledButton variant="primary" onClick={handleConfirm}>{confirmText || 'Ok'}</StyledButton>}
         {!onConfirm && !onCancel && (
           <StyledButton onClick={handleConfirm}>Ok</StyledButton>
         )}
@@ -90,15 +90,13 @@ const StyledHeaderTitle = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  background-color: #0d6efd;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  
+
   &:hover {
-    background-color: #0b5ed7;
     transform: scale(1.05);
   }
 

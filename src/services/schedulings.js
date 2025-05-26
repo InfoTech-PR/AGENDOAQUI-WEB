@@ -17,3 +17,8 @@ export const registerScheduling = (data) => {
 export const updateScheduling = (data) => {
     return api.patch("/schedulings/updateScheduling", data)
 }
+
+//cancelado
+export const createSchedulingCancel = (data) => {
+    return api.post("/schedulingsCancel/createSchedulingCancel", data);
+};
