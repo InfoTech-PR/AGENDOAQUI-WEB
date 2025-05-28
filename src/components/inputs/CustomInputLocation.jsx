@@ -3,10 +3,10 @@ import styled from "styled-components";
 
 export default function CustomInputLocation({ label, name, value, onChange, required = false }) {
   const [locationObtained, setLocationObtained] = useState(false);
-  const [inputDisabled, setInputDisabled] = useState(false);
-  const [inputValue, setInputValue] = useState(value || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [coords, setCoords] = useState({ lat: null, lng: null });
+  const [inputValue, setInputValue] = useState(value || "");
 
   function handleGeolocation() {
     if (!navigator.geolocation) {
@@ -21,11 +21,10 @@ export default function CustomInputLocation({ label, name, value, onChange, requ
       (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        const locationString = `Lat: ${lat}, Lng: ${lng}`;
-        setInputValue(locationString);
+        setCoords({ lat, lng });
         setLocationObtained(true);
-        setInputDisabled(true);
         setLoading(false);
+        const locationString = `${lat},${lng}`;
         onChange({ target: { name, value: locationString } });
       },
       (err) => {
@@ -44,30 +43,33 @@ export default function CustomInputLocation({ label, name, value, onChange, requ
   return (
     <InputWrapper>
       <label htmlFor={name}>{label}</label>
-      <div className="input-group">
-        <input
-          id={name}
-          name={name}
-          type="text"
-          className="form-control"
-          placeholder={
-            locationObtained
-              ? "Localização coletada"
-              : "Digite: CEP + Rua + Bairro + Número"
-          }
-          value={inputValue}
-          onChange={handleChange}
-          disabled={inputDisabled}
-          required={required}
-        />
-        <button
-          type="button"
-          onClick={handleGeolocation}
-          disabled={inputDisabled || loading}
-        >
-          {loading ? "⏳" : "📍"}
-        </button>
-      </div>
+
+      {locationObtained ? (
+        <CollectedLocation>
+          📍 Localização coletada: Lat {coords.lat}, Lng {coords.lng}
+        </CollectedLocation>
+      ) : (
+        <div className="input-group">
+          <input
+            id={name}
+            name={name}
+            type="text"
+            className="form-control"
+            placeholder="Digite: CEP + Rua + Bairro + Número"
+            value={inputValue}
+            onChange={handleChange}
+            required={required}
+          />
+          <button
+            type="button"
+            onClick={handleGeolocation}
+            disabled={loading}
+          >
+            {loading ? "⏳" : "📍"}
+          </button>
+        </div>
+      )}
+
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </InputWrapper>
   );
@@ -121,4 +123,13 @@ const ErrorMessage = styled.p`
   margin-top: 0.5rem;
   color: red;
   font-size: 0.9rem;
+`;
+
+const CollectedLocation = styled.p`
+  margin-top: 0.5rem;
+  background-color: ${({ theme }) => theme.colors.inputBg};
+  border: 1px solid ${({ theme }) => theme.colors.inputBorder};
+  color: ${({ theme }) => theme.colors.text};
+  padding: 0.8rem 0.75rem;
+  border-radius: 4px;
 `;
