@@ -5,12 +5,17 @@ export default function CustomInputLocation({ label, name, value, onChange, requ
   const [locationObtained, setLocationObtained] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   function handleGeolocation() {
     if (!navigator.geolocation) {
-      enableManualInput();
+      setError("Geolocalização não suportada.");
       return;
     }
+
+    setLoading(true);
+    setError("");
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -20,18 +25,15 @@ export default function CustomInputLocation({ label, name, value, onChange, requ
         setInputValue(locationString);
         setLocationObtained(true);
         setInputDisabled(true);
+        setLoading(false);
         onChange({ target: { name, value: locationString } });
       },
-      (error) => {
-        console.error("Erro ao obter localização:", error);
-        enableManualInput();
+      (err) => {
+        console.error("Erro ao obter localização:", err);
+        setError("Não foi possível obter a localização. Digite manualmente.");
+        setLoading(false);
       }
     );
-  }
-
-  function enableManualInput() {
-    setLocationObtained(false);
-    setInputDisabled(false);
   }
 
   function handleChange(e) {
@@ -58,10 +60,15 @@ export default function CustomInputLocation({ label, name, value, onChange, requ
           disabled={inputDisabled}
           required={required}
         />
-        <button type="button" onClick={handleGeolocation}>
-          📍
+        <button
+          type="button"
+          onClick={handleGeolocation}
+          disabled={inputDisabled || loading}
+        >
+          {loading ? "⏳" : "📍"}
         </button>
       </div>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </InputWrapper>
   );
 }
@@ -102,5 +109,16 @@ const InputWrapper = styled.div`
     cursor: pointer;
     height: 100%;
     white-space: nowrap;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   }
+`;
+
+const ErrorMessage = styled.p`
+  margin-top: 0.5rem;
+  color: red;
+  font-size: 0.9rem;
 `;
