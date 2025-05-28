@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { CustomModal, PhoneInput, PasswordInput, CustomInput, CustomButton, CustomLink, CustomSelect } from "../../components";
+import { CustomModal, PhoneInput, CustomInput, CustomButton, CustomLink, CustomSelect } from "../../components";
 import { registerBusiness } from "../../services/business";
 import { useLocation } from "react-router-dom";
 

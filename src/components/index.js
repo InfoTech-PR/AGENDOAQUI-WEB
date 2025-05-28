@@ -9,3 +9,5 @@ export { default as CustomButton } from './CustomButton';
 export { default as CustomLink } from './CustomLink';
 export { default as CustomSelect } from './CustomSelect';
 export { default as SchedulingTable } from './SchedulingTable';
+export { default as CustomInputTextArea } from './inputs/CustomInputTextArea ';
+export { default as CustomInputLocation } from './inputs/CustomInputLocation';
