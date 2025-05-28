@@ -1,18 +1,44 @@
 import MainLayout from "../layouts/MainLayout";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect  } from "react";
 import styled from "styled-components";
-import { CustomInput, CustomInputTextArea, CustomInputLocation } from "../components";
+import { CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment } from "../components";
 
 export default function MinhaPagina() {
-  const [formData, setFormData] = useState({ name: "", description: "", images: [], location: "" });
+  const [formData, setFormData] = useState({ name: "", description: "", images: [], location: "", hours: {}, services: {}, payments: {} });
+  const [hours, setHours] = useState({
+    segunda: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+    terca: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+    quarta: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+    quinta: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+    sexta: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+    sabado: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+    domingo: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
+  });
+  const [payments, setPayments] = useState({
+    pix: false,
+    credito: false,
+    debito: false,
+    transferencia: false,
+    dinheiro: false,
+    outros: false,
+    outrosDescricao: ""
+  });
+
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      hours: hours,
+      payments: payments,
+    }));
+  }, [hours, payments]);
 
   function handleChange(e) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    console.log(formData)
   }
 
   function handleImageChange(e) {
@@ -21,10 +47,23 @@ export default function MinhaPagina() {
       ...prev,
       images: files,
     }));
+    console.log(formData)
   }
   
   function handleImageClick() {
     fileInputRef.current.click();
+  }
+
+  function showPage() {
+    alert('Vai mostrar a previa da pagina no futuro')
+  }
+
+  function addService() {
+    alert('Vai adicionar um serviço')
+  }
+
+  function addEmployer() {
+    alert('Vai adicionar um funcionario')
   }
 
   const preview = formData.images && formData.images.length > 0 ? URL.createObjectURL(formData.images[0]) : "/upload.jpg";
@@ -32,12 +71,18 @@ export default function MinhaPagina() {
   return (
     <MainLayout>
       <Styled.Container>
-        <Styled.Title>Tela de Minha Pagina</Styled.Title>
-        <Styled.Subtitle>Adicione uma ou várias fotos</Styled.Subtitle>
+        <Styled.Line>
+          <Styled.Column>
+            <Styled.Title>Tela de Minha Pagina</Styled.Title>
+            <Styled.Subtitle>Adicione uma ou várias fotos</Styled.Subtitle>
+          </Styled.Column>
+          <CustomButton onClick={showPage}>Exibir Página</CustomButton>
+        </Styled.Line>
 
         <Styled.Form>
           <Styled.Line>
             <Styled.Column>
+
               <Styled.ImageWrapper onClick={handleImageClick}>
                 <Styled.Image src={preview} alt="Clique para alterar" />
               </Styled.ImageWrapper>
@@ -80,6 +125,25 @@ export default function MinhaPagina() {
               required
             />
           </Styled.Line>
+
+          <Styled.Line>
+            <CustomHourFormInput label={"Disponibilidade de Horários"} hours={hours} setHours={setHours} />
+          </Styled.Line>
+
+          <Styled.Line>
+            <Styled.Title>Serviços</Styled.Title>
+            <CustomButton onClick={addService}>+ Adicionar Serviço</CustomButton>
+          </Styled.Line>
+
+          <Styled.Line>
+            <CustomInputFormPayment payments={payments} setPayments={setPayments} />
+          </Styled.Line>
+
+          <Styled.Line>
+            <Styled.Title>Equipe</Styled.Title>
+            <CustomButton onClick={addEmployer}>+ Adicionar Funcionário</CustomButton>
+          </Styled.Line>
+          
         </Styled.Form>
       </Styled.Container>
     </MainLayout>

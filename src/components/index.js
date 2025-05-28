@@ -11,3 +11,5 @@ export { default as CustomSelect } from './CustomSelect';
 export { default as SchedulingTable } from './SchedulingTable';
 export { default as CustomInputTextArea } from './inputs/CustomInputTextArea ';
 export { default as CustomInputLocation } from './inputs/CustomInputLocation';
+export { default as CustomHourFormInput } from './inputs/CustomHourFormInput';
+export { default as CustomInputFormPayment } from './inputs/CustomInputFormPayment';
