@@ -195,7 +195,7 @@ const Styled = {
     cursor: pointer;
     display: block;
 
-    @media (min-width: 768px) {
+    @media (min-width: 830px) {
       display: none;
     }
   `,

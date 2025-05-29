@@ -160,7 +160,7 @@ const Styled = {
     `,
 
     RightPanel: styled.div`
-      background-color: ${({ theme }) => theme.colors.primary};
+      background-color: ${({ theme }) => theme.colors.primaryLight};
       flex: 3;
       padding: 2rem;
       overflow-y: auto;

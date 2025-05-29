@@ -1,10 +1,13 @@
 import MainLayout from "../layouts/MainLayout";
 import { useState, useRef, useEffect  } from "react";
 import styled from "styled-components";
-import { CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment } from "../components";
+import { CustomModal, CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment, PhoneInput, CustomInputService } from "../components";
+import { registerService } from "../services/services";
 
 export default function MinhaPagina() {
-  const [formData, setFormData] = useState({ name: "", description: "", images: [], location: "", hours: {}, services: {}, payments: {} });
+  const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
+  const userId = storedUser.user.id;
+  const [formData, setFormData] = useState({ name: "", description: "", images: [], location: "", hours: {}, services: {}, payments: {}, phone: "" });
   const [hours, setHours] = useState({
     segunda: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
     terca: { ativo: false, entrada: "", saida: "", intervalo: false, intervaloInicio: "", intervaloFim: "" },
@@ -23,8 +26,12 @@ export default function MinhaPagina() {
     outros: false,
     outrosDescricao: ""
   });
-
+  const [showServiceForm, setShowServiceForm] = useState(false);
+  const [serviceData, setServiceData] = useState({ id_business: '', image: null, name: '', summary: '', price: '', duration: '' });
+  const [services, setServices] = useState([]);
   const fileInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState({ show: false, type: "info", message: "" });
 
   useEffect(() => {
     setFormData(prev => ({
@@ -49,7 +56,7 @@ export default function MinhaPagina() {
     }));
     console.log(formData)
   }
-  
+
   function handleImageClick() {
     fileInputRef.current.click();
   }
@@ -58,15 +65,72 @@ export default function MinhaPagina() {
     alert('Vai mostrar a previa da pagina no futuro')
   }
 
-  function addService() {
-    alert('Vai adicionar um serviço')
-  }
-
   function addEmployer() {
     alert('Vai adicionar um funcionario')
   }
 
+  function addService() {
+    setServiceData(prev => ({
+      ...prev,
+    }));
+    setShowServiceForm(true);
+  }
+
+  function cancelService() {
+    setShowServiceForm(false);
+    setServiceData({ image: null, name: '', summary: '', price: '', duration: '' });
+  }
+
+  async function confirmService() {
+    setLoading(true);
+    try {
+      const formattedServiceData = {
+        ...serviceData,
+        id_business: userId, 
+        price: parseFloat(
+          serviceData.price
+            .replace('R$', '')
+            .replace(/\s/g, '')
+            .replace('.', '')
+            .replace(',', '.')
+        ),
+        duration: convertTimeToMinutes(serviceData.duration)
+      };
+  
+      const response = await registerService(formattedServiceData);
+  
+      setModal({
+        show: true,
+        type: "success",
+        message: response.data.message,
+      });
+    } catch (error) {
+      console.log(error);
+      setModal({
+        show: true,
+        type: "error",
+        message: error.response?.data?.message || "Erro ao registrar serviço",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  function convertTimeToMinutes(timeStr) {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+  
+  function handleServiceChange(e) {
+    const { name, value, files } = e.target;
+    setServiceData(prev => ({
+      ...prev,
+      [name]: files ? files[0] : value
+    }));
+  }
+
   const preview = formData.images && formData.images.length > 0 ? URL.createObjectURL(formData.images[0]) : "/upload.jpg";
+  const previewService = serviceData.image ? URL.createObjectURL(serviceData.image) : "/upload.jpg";
 
   return (
     <MainLayout>
@@ -132,8 +196,34 @@ export default function MinhaPagina() {
 
           <Styled.Line>
             <Styled.Title>Serviços</Styled.Title>
-            <CustomButton onClick={addService}>+ Adicionar Serviço</CustomButton>
+            {!showServiceForm && (
+              <CustomButton onClick={addService}>+ Adicionar Serviço</CustomButton>
+            )}
           </Styled.Line>
+
+          {showServiceForm && (
+            <CustomInputService
+              serviceData={serviceData}
+              handleImageClick={() => {setServiceData(1)}}
+              preview={previewService}
+              onChange={(handleServiceChange)}
+              onConfirm={confirmService}
+              onCancel={cancelService}
+            />
+          )}
+
+          {services.map((service, idx) => (
+            <Styled.ServiceCard key={idx}>
+              <img src={service.imageUrl} alt={service.name} width="100" />
+              <div>
+                <h4>{service.name}</h4>
+                <p>{service.summary}</p>
+                <p>Valor: {service.price}</p>
+                <p>Duração: {service.duration}</p>
+              </div>
+            </Styled.ServiceCard>
+          ))}
+
 
           <Styled.Line>
             <CustomInputFormPayment payments={payments} setPayments={setPayments} />
@@ -143,8 +233,29 @@ export default function MinhaPagina() {
             <Styled.Title>Equipe</Styled.Title>
             <CustomButton onClick={addEmployer}>+ Adicionar Funcionário</CustomButton>
           </Styled.Line>
+
+          <Styled.ContactSection>
+            <Styled.Title>Contato</Styled.Title>
+            <PhoneInput
+              label="Telefone/Celular"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+            <CustomButton onClick={addEmployer}>+ Adicionar Rede Social</CustomButton>
+          </Styled.ContactSection>
+
+          <hr className="my-4 border-dark" />
+
+          <CustomButton onClick={addEmployer}>Publicar Minha Página</CustomButton>
           
         </Styled.Form>
+        <CustomModal
+          show={modal.show}
+          type={modal.type}
+          message={modal.message}
+          onHide={() => setModal({ ...modal, show: false })}
+      />
       </Styled.Container>
     </MainLayout>
   );
@@ -164,6 +275,17 @@ const Styled = {
     margin-bottom: 1rem;
     font-weight: bold;
     color: ${({ theme }) => theme.colors.primaryDark};
+  `,
+
+  ContactSection: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   `,
 
   Subtitle: styled.h6`

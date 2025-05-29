@@ -119,7 +119,7 @@ const SidebarContainer = styled.aside`
     padding: 0;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 830px) {
     position: relative;
     left: 0;
     z-index: auto;
@@ -206,7 +206,7 @@ const Overlay = styled.div`
   background: ${({ $bgColor }) => $bgColor || "rgba(0, 0, 0, 0.4)"};
   z-index: 1000;
 
-  @media (min-width: 768px) {
+  @media (min-width: 830px) {
     display: none;
   }
 `;

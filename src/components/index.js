@@ -13,3 +13,5 @@ export { default as CustomInputTextArea } from './inputs/CustomInputTextArea ';
 export { default as CustomInputLocation } from './inputs/CustomInputLocation';
 export { default as CustomHourFormInput } from './inputs/CustomHourFormInput';
 export { default as CustomInputFormPayment } from './inputs/CustomInputFormPayment';
+export { default as CustomInputService } from './inputs/CustomInputService';
+export { default as CustomInputPrice } from './inputs/CustomInputPrice';

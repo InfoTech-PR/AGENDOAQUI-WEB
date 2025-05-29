@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { FloatingLabel, Form } from "react-bootstrap";
 
@@ -24,7 +23,7 @@ export default function CustomInputTextArea({
         required={required}
         disabled={disabled}
         rows={rows}
-        style={{ resize: "vertical", height: "100%" }}
+        style={{ resize: "none", width: "100%", height: "140%" }}
       />
     </InputWrapper>
   );
