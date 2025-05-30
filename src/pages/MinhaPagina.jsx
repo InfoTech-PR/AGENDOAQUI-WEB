@@ -1,8 +1,8 @@
 import MainLayout from "../layouts/MainLayout";
 import { useState, useRef, useEffect  } from "react";
 import styled from "styled-components";
-import { CustomModal, CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment, PhoneInput, CustomInputService } from "../components";
-import { registerService } from "../services/services";
+import { CustomModal, CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment, PhoneInput, CustomInputService, ServiceCardList } from "../components";
+import { registerService, getAllServicesByBusiness } from "../services/services";
 
 export default function MinhaPagina() {
   const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
@@ -31,7 +31,7 @@ export default function MinhaPagina() {
   const [services, setServices] = useState([]);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [modal, setModal] = useState({ show: false, type: "info", message: "" });
+  const [modal, setModal] = useState({ show: false, type: "info", message: "", onConfirm: null, onCancel: null });
 
   useEffect(() => {
     setFormData(prev => ({
@@ -40,6 +40,19 @@ export default function MinhaPagina() {
       payments: payments,
     }));
   }, [hours, payments]);
+
+  useEffect(() => {
+    fetchServices();
+  }, [userId]);
+
+  async function fetchServices() {
+    try {
+      const response = await getAllServicesByBusiness(userId);
+      setServices(response);
+    } catch (error) {
+      console.error("Erro ao carregar serviços:", error);
+    }
+  }
 
   function handleChange(e) {
     setFormData({
@@ -79,37 +92,47 @@ export default function MinhaPagina() {
   function cancelService() {
     setShowServiceForm(false);
     setServiceData({ image: null, name: '', summary: '', price: '', duration: '' });
+    fetchServices();
   }
 
   async function confirmService() {
     setLoading(true);
     try {
-      const formattedServiceData = {
-        ...serviceData,
-        id_business: userId, 
-        price: parseFloat(
+      const formData = new FormData();
+      formData.append('image', serviceData.image); 
+      formData.append('id_business', userId);
+  
+      formData.append(
+        'price',
+        parseFloat(
           serviceData.price
             .replace('R$', '')
             .replace(/\s/g, '')
             .replace('.', '')
             .replace(',', '.')
-        ),
-        duration: convertTimeToMinutes(serviceData.duration)
-      };
+        )
+      );
   
-      const response = await registerService(formattedServiceData);
+      formData.append('duration', convertTimeToMinutes(serviceData.duration));
+      formData.append('name', serviceData.name);
+      formData.append('summary', serviceData.summary);
+  
+      const response = await registerService(formData);
   
       setModal({
         show: true,
-        type: "success",
+        type: 'success',
         message: response.data.message,
+        onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
       });
+      cancelService();
     } catch (error) {
       console.log(error);
       setModal({
         show: true,
-        type: "error",
-        message: error.response?.data?.message || "Erro ao registrar serviço",
+        type: 'error',
+        message: error.response?.data?.message || 'Erro ao registrar serviço',
+        onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
       });
     } finally {
       setLoading(false);
@@ -207,23 +230,19 @@ export default function MinhaPagina() {
               handleImageClick={() => {setServiceData(1)}}
               preview={previewService}
               onChange={(handleServiceChange)}
+              onLoading={loading}
               onConfirm={confirmService}
               onCancel={cancelService}
             />
           )}
 
-          {services.map((service, idx) => (
-            <Styled.ServiceCard key={idx}>
-              <img src={service.imageUrl} alt={service.name} width="100" />
-              <div>
-                <h4>{service.name}</h4>
-                <p>{service.summary}</p>
-                <p>Valor: {service.price}</p>
-                <p>Duração: {service.duration}</p>
-              </div>
-            </Styled.ServiceCard>
-          ))}
+          {!showServiceForm && Array.isArray(services) && services.length > 0 && (
+            <ServiceCardList services={services} />
+          )}
 
+          {!showServiceForm && (!Array.isArray(services) || services.length === 0) && (
+            <p>Nenhum serviço cadastrado.</p>
+          )}
 
           <Styled.Line>
             <CustomInputFormPayment payments={payments} setPayments={setPayments} />
@@ -254,7 +273,11 @@ export default function MinhaPagina() {
           show={modal.show}
           type={modal.type}
           message={modal.message}
-          onHide={() => setModal({ ...modal, show: false })}
+          onConfirm={modal.onConfirm}
+          onCancel={modal.onCancel}
+          onHide={() => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null })}
+          confirmText={modal.onConfirm ? "Sim" : undefined}
+          cancelText={modal.onCancel ? "Ok" : "Fechar"}
       />
       </Styled.Container>
     </MainLayout>

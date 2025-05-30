@@ -7,6 +7,7 @@ export default function CustomInputService({
   onChange,
   onConfirm,
   onCancel,
+  onLoading,
   preview
 }) {
   const fileInputRef = useRef(null);
@@ -61,7 +62,7 @@ export default function CustomInputService({
             onChange={onChange}
           />
           <Styled.ButtonGroup>
-            <CustomButton onClick={onConfirm}>Confirmar</CustomButton>
+            <CustomButton loading={onLoading} onClick={onConfirm}>Confirmar</CustomButton>
             <CustomButton variant="error" onClick={onCancel}>Cancelar</CustomButton>
           </Styled.ButtonGroup>
         </Styled.Column>
@@ -69,7 +70,6 @@ export default function CustomInputService({
     </Styled.Wrapper>
   );
 }
-
 
 const Styled = {
   Wrapper: styled.div`
