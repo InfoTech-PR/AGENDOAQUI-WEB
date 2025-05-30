@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import { CustomInput, CustomInputTextArea, CustomButton,CustomInputPrice, CustomHourInput } from "../";
+import { CustomInput, CustomInputTextArea, CustomButton } from "..";
 
-export default function CustomInputService({
-  serviceData,
+export default function EmployeeRegister({
+  employeeData,
   onChange,
   onConfirm,
   onCancel,
@@ -35,36 +35,30 @@ export default function CustomInputService({
 
         <Styled.Column>
           <CustomInput
-            label="Nome do Serviço"
+            label="Nome do Funcionário"
             name="name"
-            value={serviceData.name}
+            value={employeeData.name}
             onChange={onChange}
           />
           <CustomInputTextArea
-            label="Resumo do Serviço"
+            label="Descrição"
             name="summary"
-            value={serviceData.summary}
+            value={employeeData.summary}
             onChange={onChange}
           />
         </Styled.Column>
 
         <Styled.Column>
-          <CustomInputPrice
-            label="Valor"
-            name="price"
-            value={serviceData.price}
-            onChange={onChange}
-          />
-          <CustomHourInput
-            label="Tempo de Serviço (horas:minutos)"
-            name="duration"
-            value={serviceData.duration}
-            onChange={onChange}
-          />
-          <Styled.ButtonGroup>
-            <CustomButton loading={onLoading} onClick={onConfirm}>Confirmar</CustomButton>
-            <CustomButton variant="error" onClick={onCancel}>Cancelar</CustomButton>
-          </Styled.ButtonGroup>
+					<CustomInputTextArea
+						label="Formação / Especialização"
+						name="specialization"
+						value={employeeData.specialization}
+						onChange={onChange}
+					/>
+					<Styled.ButtonGroup>
+						<CustomButton loading={onLoading} onClick={onConfirm}>Confirmar</CustomButton>
+						<CustomButton variant="error" onClick={onCancel}>Cancelar</CustomButton>
+					</Styled.ButtonGroup>
         </Styled.Column>
       </Styled.Line>
     </Styled.Wrapper>
@@ -98,8 +92,8 @@ const Styled = {
     display: flex;
     gap: 0.5rem;
     margin-top: 1rem;
-    justify-content: center;      /* centraliza horizontalmente */
-    align-items: center;          /* centraliza verticalmente */
+    justify-content: center;
+    align-items: center; 
   `,
   
   Column: styled.div`

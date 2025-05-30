@@ -1,8 +1,9 @@
 import MainLayout from "../layouts/MainLayout";
 import { useState, useRef, useEffect  } from "react";
 import styled from "styled-components";
-import { CustomModal, CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment, PhoneInput, CustomInputService, ServiceCardList } from "../components";
+import { CustomModal, CustomInput, CustomInputTextArea, CustomInputLocation, CustomButton, CustomHourFormInput, CustomInputFormPayment, PhoneInput, ServiceRegister, ServiceList, EmployeeList, EmployeeRegister } from "../components";
 import { registerService, getAllServicesByBusiness } from "../services/services";
+import { registerEmployees, getAllEmployeesByBusiness } from "../services/employees";
 
 export default function MinhaPagina() {
   const storedUser = JSON.parse(localStorage.getItem("dataUser") || "{}");
@@ -27,8 +28,11 @@ export default function MinhaPagina() {
     outrosDescricao: ""
   });
   const [showServiceForm, setShowServiceForm] = useState(false);
+  const [showEmployeeForm, setShowEmployeeForm] = useState(false);
   const [serviceData, setServiceData] = useState({ id_business: '', image: null, name: '', summary: '', price: '', duration: '' });
+  const [employeeData, setEmployeeData] = useState({ id_business: '', image: null, name: '', summary: '', specialization: '' });
   const [services, setServices] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({ show: false, type: "info", message: "", onConfirm: null, onCancel: null });
@@ -43,6 +47,7 @@ export default function MinhaPagina() {
 
   useEffect(() => {
     fetchServices();
+    fetchEmployees();
   }, [userId]);
 
   async function fetchServices() {
@@ -51,6 +56,15 @@ export default function MinhaPagina() {
       setServices(response);
     } catch (error) {
       console.error("Erro ao carregar serviços:", error);
+    }
+  } 
+  
+  async function fetchEmployees() {
+    try {
+      const response = await getAllEmployeesByBusiness(userId);
+      setEmployees(response);
+    } catch (error) {
+      console.error("Erro ao carregar funcionarios:", error);
     }
   }
 
@@ -79,7 +93,10 @@ export default function MinhaPagina() {
   }
 
   function addEmployer() {
-    alert('Vai adicionar um funcionario')
+    setEmployeeData(prev => ({
+      ...prev,
+    }));
+    setShowEmployeeForm(true);
   }
 
   function addService() {
@@ -138,6 +155,44 @@ export default function MinhaPagina() {
       setLoading(false);
     }
   }
+
+  function cancelEmployee() {
+    setShowEmployeeForm(false);
+    setEmployeeData({ image: null, name: '', summary: '', specialization: '' });
+    fetchEmployees();
+  }
+
+  async function confirmEmployee() {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', employeeData.image); 
+      formData.append('id_business', userId);  
+      formData.append('specialization', employeeData.specialization);
+      formData.append('name', employeeData.name);
+      formData.append('summary', employeeData.summary);
+  
+      const response = await registerEmployees(formData);
+  
+      setModal({
+        show: true,
+        type: 'success',
+        message: response.data.message,
+        onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
+      });
+      cancelEmployee();
+    } catch (error) {
+      console.log(error);
+      setModal({
+        show: true,
+        type: 'error',
+        message: error.response?.data?.message || 'Erro ao registrar funcionario',
+        onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
   
   function convertTimeToMinutes(timeStr) {
     const [hours, minutes] = timeStr.split(':').map(Number);
@@ -152,8 +207,17 @@ export default function MinhaPagina() {
     }));
   }
 
+  function handleEmployeeChange(e) {
+    const { name, value, files } = e.target;
+    setEmployeeData(prev => ({
+      ...prev,
+      [name]: files ? files[0] : value
+    }));
+  }
+
   const preview = formData.images && formData.images.length > 0 ? URL.createObjectURL(formData.images[0]) : "/upload.jpg";
   const previewService = serviceData.image ? URL.createObjectURL(serviceData.image) : "/upload.jpg";
+  const previewEmployee = employeeData.image ? URL.createObjectURL(employeeData.image) : "/upload.jpg";
 
   return (
     <MainLayout>
@@ -225,9 +289,8 @@ export default function MinhaPagina() {
           </Styled.Line>
 
           {showServiceForm && (
-            <CustomInputService
+            <ServiceRegister
               serviceData={serviceData}
-              handleImageClick={() => {setServiceData(1)}}
               preview={previewService}
               onChange={(handleServiceChange)}
               onLoading={loading}
@@ -237,7 +300,7 @@ export default function MinhaPagina() {
           )}
 
           {!showServiceForm && Array.isArray(services) && services.length > 0 && (
-            <ServiceCardList services={services} />
+            <ServiceList services={services} />
           )}
 
           {!showServiceForm && (!Array.isArray(services) || services.length === 0) && (
@@ -250,8 +313,30 @@ export default function MinhaPagina() {
 
           <Styled.Line>
             <Styled.Title>Equipe</Styled.Title>
-            <CustomButton onClick={addEmployer}>+ Adicionar Funcionário</CustomButton>
+            {!showEmployeeForm && (
+              <CustomButton onClick={addEmployer}>+ Adicionar Funcionário</CustomButton>
+            )}
           </Styled.Line>
+
+          {showEmployeeForm && (
+            <EmployeeRegister
+              employeeData={employeeData}
+              preview={previewEmployee}
+              onChange={(handleEmployeeChange)}
+              onLoading={loading}
+              onConfirm={confirmEmployee}
+              onCancel={cancelEmployee}
+            />
+          )}
+
+          {!showEmployeeForm && Array.isArray(employees) && employees.length > 0 && (
+            <EmployeeList employees={employees} />
+          )}
+
+          {!showEmployeeForm && (!Array.isArray(employees) || employees.length === 0) && (
+            <p>Nenhum Funcionário registrado.</p>
+          )}
+
 
           <Styled.ContactSection>
             <Styled.Title>Contato</Styled.Title>

@@ -1,27 +1,31 @@
 import styled from "styled-components";
+import { CustomButton } from "..";
 
-export default function ServiceCardList({ services }) {
+export default function EmployeeList({ employees }) {
   const baseUrl = import.meta.env.VITE_BASE_URL || '';
 
   return (
     <Styled.CardGrid>
-      {services.map(({ id, image, name, summary, price }) => (
+      {employees.map(({ id, image, name, specialization, summary }) => (
         <Styled.Card key={id}>
           <Styled.ImageWrapper>
             {image ? (
-              <Styled.ServiceImage src={image ? `${baseUrl}${image}` : ''} alt={name} />
+              <Styled.EmployeeImage src={image ? `${baseUrl}${image}` : ''} alt={name} />
             ) : (
               <Styled.Placeholder>Sem imagem</Styled.Placeholder>
             )}
           </Styled.ImageWrapper>
 
-          <Styled.ServiceInfo>
-            <Styled.ServiceName>{name}</Styled.ServiceName>
-            <Styled.ServiceSummary>{summary}</Styled.ServiceSummary>
-            <Styled.ServicePrice>
-              Preço: R$ {typeof price === "number" ? price.toFixed(2) : price}
-            </Styled.ServicePrice>
-          </Styled.ServiceInfo>
+          <Styled.EmployeeInfo>
+            <Styled.EmployeeName>{name}</Styled.EmployeeName>
+            <Styled.EmployeeSummary>{summary}</Styled.EmployeeSummary>
+            <Styled.EmployeeSummary>{specialization}</Styled.EmployeeSummary>
+          </Styled.EmployeeInfo>
+
+          <Styled.ButtonGroup>
+            <CustomButton >Editar</CustomButton>
+            <CustomButton variant="error">Excluir</CustomButton>
+          </Styled.ButtonGroup>
         </Styled.Card>
       ))}
     </Styled.CardGrid>
@@ -34,6 +38,14 @@ const Styled = {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-top: 1.5rem;
+  `,
+
+  ButtonGroup: styled.div`
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center; 
   `,
 
   Card: styled.div`
@@ -58,12 +70,15 @@ const Styled = {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   `,
 
-  ServiceImage: styled.img`
+  EmployeeImage: styled.img`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    display: block;
   `,
 
   Placeholder: styled.div`
@@ -71,32 +86,25 @@ const Styled = {
     font-size: 1rem;
   `,
 
-  ServiceInfo: styled.div`
+  EmployeeInfo: styled.div`
     padding: 1rem 1.25rem 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
   `,
 
-  ServiceName: styled.h3`
+  EmployeeName: styled.h3`
     font-weight: 700;
     font-size: 1.25rem;
     color: #222222;
     margin: 0 0 0.5rem 0;
   `,
 
-  ServiceSummary: styled.p`
+  EmployeeSummary: styled.p`
     flex-grow: 1;
     font-size: 1rem;
     color: #555555;
     margin-bottom: 1rem;
     line-height: 1.4;
-  `,
-
-  ServicePrice: styled.p`
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #007BFF;
-    margin: 0;
   `,
 };
