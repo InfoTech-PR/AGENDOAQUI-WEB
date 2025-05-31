@@ -109,6 +109,7 @@ export default function MinhaPagina() {
   function cancelService() {
     setShowServiceForm(false);
     setServiceData({ image: null, name: '', summary: '', price: '', duration: '' });
+    if (fileInputRef.current) fileInputRef.current.value = null; 
     fetchServices();
   }
 
@@ -159,6 +160,7 @@ export default function MinhaPagina() {
   function cancelEmployee() {
     setShowEmployeeForm(false);
     setEmployeeData({ image: null, name: '', summary: '', specialization: '' });
+    if (fileInputRef.current) fileInputRef.current.value = null; 
     fetchEmployees();
   }
 
