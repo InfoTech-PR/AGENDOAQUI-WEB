@@ -110,7 +110,6 @@ export default function MinhaPagina() {
     setShowServiceForm(false);
     setServiceData({ image: null, name: '', summary: '', price: '', duration: '' });
     if (fileInputRef.current) fileInputRef.current.value = null; 
-    fetchServices();
   }
 
   async function confirmService() {
@@ -141,7 +140,10 @@ export default function MinhaPagina() {
         show: true,
         type: 'success',
         message: response.data.message,
-        onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
+        onCancel: () => {
+          setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null });
+          fetchServices();
+        }
       });
       cancelService();
     } catch (error) {
@@ -161,7 +163,6 @@ export default function MinhaPagina() {
     setShowEmployeeForm(false);
     setEmployeeData({ image: null, name: '', summary: '', specialization: '' });
     if (fileInputRef.current) fileInputRef.current.value = null; 
-    fetchEmployees();
   }
 
   async function confirmEmployee() {
@@ -180,7 +181,10 @@ export default function MinhaPagina() {
         show: true,
         type: 'success',
         message: response.data.message,
-        onCancel: () => setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null }),
+        onCancel: () => {
+          setModal({ show: false, type: "info", message: "", onConfirm: null, onCancel: null });
+          fetchEmployees();
+        },
       });
       cancelEmployee();
     } catch (error) {
